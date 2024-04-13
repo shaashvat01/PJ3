@@ -131,18 +131,20 @@ void decreaseKey(HEAP* heap, int i, double newKey)
         return;
     }
     // if heap size is equal to 0 then return.
-    if(heap->size == 0)
+    if(heap->size <= 0)
     {
         return;
     }
-    i--;  // decrementing i.
-    // checking range of i and returning if new key of greater than original key.
-    if(i<0 && i>heap->size || heap->A[i]->key < newKey)
-    {
+
+    i--;
+
+    if (heap->A[i]->key < newKey) {
+        cout << "Error: invalid call to DecreaseKey" << endl;
         return;
     }
-    // changing the vakue of key.
+
     heap->A[i]->key = newKey;
+
     // rearranging to maintain min heap property.
     while(i != 0 && heap->A[(i-1)/2]->key > heap->A[i]->key) {
         // swapping A[i] with A[(i-1)/2] or child with parent.

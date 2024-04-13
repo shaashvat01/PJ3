@@ -170,9 +170,7 @@ int main(int argc, char **argv)
 
         if (strcmp(Word, "SingleSource") == 0) 
         {
-            cout << "in single source main before." << endl;
             singleSource(list, numV, num1, adjList);
-            cout << "in single source main." << endl;
             continue;
         }
 

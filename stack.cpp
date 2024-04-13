@@ -7,18 +7,14 @@ using namespace std;
 STACK* init()
 {
     STACK* stack = (STACK*)malloc(sizeof(TAG_STACK));
-    if (stack == NULL) {
-        cout << "Memory allocation failed." << endl;
-        return NULL;
-    }
     stack->head = NULL;
     return stack;
 }
 
 // adding a new vertex to the stack
-void push(STACK* stack, pVertex vertex)
+void push(STACK* stack, VERTEX *vertex)
 {
-    TAG_STACK* element = (TAG_STACK*)malloc(sizeof(TAG_STACK));
+    TAG_STACK *element = (TAG_STACK*)malloc(sizeof(TAG_STACK));
     if(element == NULL)
     {
         cout << "Memory allocation failed." << endl;
@@ -36,8 +32,8 @@ VERTEX* pop(STACK* stack) {
         return NULL;
     }
     TAG_STACK* temp = stack->head;
-    VERTEX* vertex = temp->vertex;
-    stack->head = temp->next; // Update head to next element
+    VERTEX* vertex = stack->head->vertex;
+    stack->head = stack->head->next; // Update head to next element
     free(temp); // Free the popped element
     return vertex;
 }
@@ -47,5 +43,8 @@ bool empty(STACK* stack) {
     if (stack->head == NULL) {
         return true; 
     }
-    return false;
+    else
+    {
+        return false;
+    }
 }
