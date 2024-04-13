@@ -57,33 +57,16 @@ void singleSource(pVertex* V, int vertices, int source, pEdge* adjList)
 
         for(pEdge edg = adjList[u->id]; edg != NULL; edg = edg->next)
         {
-            pVertex v = V[edg->v];
-            if(v->key > u->key + edg->w)
-            {
-                relax(u,v,edg->w);
-                decreaseKey(heap, v->position, v->key);
-            }
+            // pVertex v = V[edg->v];
+            // if(v->key > u->key + edg->w)
+            // {
+            //     relax(u,v,edg->w);
+            //     //decreaseKey(heap, v->position, v->key);
+            // }
+            cout << "inside for loop" << endl;
         }
         cout << "after push for loop\n" << endl;
     }
-
-    // while(heap->size > 0)
-    // {   
-    //     VERTEX* u = extractMin(heap);
-    //     push(stack,u);
-        
-    //     for(pEdge edg = adjList[u->id]; edg != NULL; edg = edg->next)
-    //     {
-    //         //cout << "single source in graph in while in for" << endl;
-    //         VERTEX* v = V[edg->v];
-    //         if(v->key > u->key + edg->w)
-    //         {
-    //             relax(u,v,edg->w);
-    //             //decreaseKey(heap, v->position, v->key);
-    //         }
-    //     }
-    //     cout << "single source in graph in while after 5" << endl;
-    // }
     cout << "single source in graph in while after while" << endl;
 
     VERTEX* pVertex;
