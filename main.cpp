@@ -14,6 +14,9 @@ int main(int argc, char **argv)
 {
     FILE *fp; //File object
     HEAP *myHEAP; //Heap object
+
+    // user argument
+    int num1, num2;
     
     //sample variable for debug
     int v;
@@ -43,15 +46,13 @@ int main(int argc, char **argv)
     fscanf(fp, "%d %d", &numV, &numE);
 
     // Allocate memory for vList and adjList after reading numV and numE
-    pVertex* list = new pVertex[numV + 1];
-    pEdge* adjList = new pEdge[numV + 1];
+    pVertex* list = new pVertex[numV];
+    pEdge* adjList = new pEdge[numV];
 
-    for (int i = 1; i <= numV; ++i) {
+    for (int i = 0; i < numV; i++) {
         // Allocate memory for each VERTEX object
         list[i] = new VERTEX;
         list[i]->id = i; // Set the index of the vertex
-        list[i]->key = INFINITY; // Initialize key to 0 or INFINITY as required
-        adjList[i] = nullptr; // Initialize each adjacency list as empty
     }
 
     // Read the remaining lines
@@ -95,7 +96,8 @@ int main(int argc, char **argv)
                 if (!adjList[u]) 
                 {
                     adjList[u] = newNode;
-                } else 
+                } 
+                else 
                 {
                     pEdge current = adjList[u];
                     while (current->next) 
@@ -135,7 +137,7 @@ int main(int argc, char **argv)
 
     while(1)
     {
-        returnV = nextInstruction(Word, &numV,&numE);
+        returnV = nextInstruction(Word, &num1, &num2);
         if(returnV == 0)
         {
             fprintf(stderr, "Warning: Invalid instruction\n");
@@ -168,16 +170,7 @@ int main(int argc, char **argv)
 
         if (strcmp(Word, "SingleSource") == 0) 
         {
-            cout << "Calling SingleSource with source vertex 1..." << endl;
-            if (list == nullptr || adjList == nullptr) 
-            {
-                cout << "Error: Vertex list or adjacency list is null." << endl;
-            } 
-            else 
-            {
-                singleSource(list, numV, 1, adjList);  // Assuming '1' is the source index
-                cout << "SingleSource function completed." << endl;
-            }
+            singleSource(list, numV, num1, adjList);
             continue;
         }
 

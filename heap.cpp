@@ -1,6 +1,7 @@
 #include <iostream>
 #include <iomanip>
 #include "heap.h"
+#include "data_structures.h"
 using namespace std;
 
 // Initialize heap
@@ -66,7 +67,7 @@ void heapify(HEAP* heap, int i)
 }
 
 // insert in heap
-void insertH(HEAP* heap, double key)
+void insertH(HEAP* heap, VERTEX* pVertex)
 {
     // If heap is NULL return error.
     if(heap == NULL)
@@ -80,7 +81,7 @@ void insertH(HEAP* heap, double key)
         return;
     }
     
-    heap->A[heap->size]->key = key;  // add new key at the end of the heap.
+    heap->A[heap->size] = pVertex;  // add new key at the end of the heap.
     int i = heap->size;  // set i.
     heap->size++;   // increment size to incorporate new element.
     
