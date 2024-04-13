@@ -26,10 +26,14 @@ void relax(pVertex u, pVertex v, double w)
 
 void singleSource(pVertex* V, int vertices, int source, pEdge* adjList)
 {
+    cout << "single source in graph" << endl;
     initSingleSource(V, vertices, source);
+    cout << "single source in graph after" << endl;
 
     pHEAP heap = init(vertices); // priority queue - min heap
     STACK* stack = init();
+
+    cout << "single source in graph after stack" << endl;
 
     if(heap == NULL)
     {
@@ -49,14 +53,16 @@ void singleSource(pVertex* V, int vertices, int source, pEdge* adjList)
         V[i]->position = i - 1; 
     }
     buildH(heap);
+    cout << "single source in graph after build heap" << endl;
 
     while(heap->size > 0)
-    {
-        pVertex u = extractMin(heap);
+    {   
+        VERTEX* u = extractMin(heap);
         push(stack,u);
         
         for(pEdge edg = adjList[u->id]; edg != NULL; edg = edg->next)
         {
+            //cout << "single source in graph in while in for" << endl;
             pVertex v = V[edg->v];
             if(v->key > u->key + edg->w)
             {
@@ -64,13 +70,17 @@ void singleSource(pVertex* V, int vertices, int source, pEdge* adjList)
                 decreaseKey(heap, v->position, v->key);
             }
         }
+        //cout << "single source in graph in while after 5" << endl;
     }
+    cout << "single source in graph in while after while" << endl;
     // // Clean up
     // for (int i = 0; i < heap->capacity; i++) {
     //     delete heap->A[i];
     // }
     // delete[] heap->A;
     // delete heap;
+
+    cout << "single source in graph after 1st while" << endl;
 
     VERTEX* pVertex;
     while(stack->head != NULL)

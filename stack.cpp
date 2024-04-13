@@ -18,10 +18,6 @@ STACK* init()
 // adding a new vertex to the stack
 void push(STACK* stack, pVertex vertex)
 {
-    if (stack == NULL) {
-        cout << "Memory allocation failed." << endl;
-        return;
-    }
     TAG_STACK* element = (TAG_STACK*)malloc(sizeof(TAG_STACK));
     if(element == NULL)
     {
@@ -34,13 +30,13 @@ void push(STACK* stack, pVertex vertex)
 } 
 
 // Pop a vertex from the Stack
-pVertex pop(STACK* stack) {
+VERTEX* pop(STACK* stack) {
     if (stack == NULL || stack->head == NULL) {
         cout << "Stack is empty." << endl;
         return NULL;
     }
     TAG_STACK* temp = stack->head;
-    pVertex vertex = temp->vertex;
+    VERTEX* vertex = temp->vertex;
     stack->head = temp->next; // Update head to next element
     free(temp); // Free the popped element
     return vertex;

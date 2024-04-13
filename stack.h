@@ -4,7 +4,7 @@
 
 STACK* init();
 void push(STACK* stack, pVertex vertex);
-pVertex pop(STACK* stack);
+VERTEX* pop(STACK* stack);
 bool empty(STACK* stack);
 
 #endif

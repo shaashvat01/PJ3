@@ -97,7 +97,7 @@ void insertH(HEAP* heap, VERTEX* pVertex)
 }
 
 // ExtractMin - get minimum value from the heap     // This code is updated to correctly return vertex
-pVertex extractMin(HEAP* heap)
+VERTEX* extractMin(HEAP* heap)
 {
     // if heap is NULL return error.
     if(heap == NULL)
@@ -111,7 +111,7 @@ pVertex extractMin(HEAP* heap)
         return NULL;
     }
     // Save the vertex with the minimum key value
-    pVertex minVertex = heap->A[0];
+    VERTEX* minVertex = heap->A[0];
 
     // Replace the root of the heap with the last element
     heap->A[0] = heap->A[heap->size - 1];
