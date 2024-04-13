@@ -17,7 +17,7 @@ void push(STACK* stack, VERTEX *vertex)
     TAG_STACK *element = (TAG_STACK*)malloc(sizeof(TAG_STACK));
     if(element == NULL)
     {
-        cout << "Memory allocation failed." << endl;
+        fprintf(stderr, "Memory allocation failed");
         return;
     }
     element->vertex = vertex;
