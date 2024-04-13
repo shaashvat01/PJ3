@@ -1,0 +1,15 @@
+# Ignore all .txt files
+*.txt
+
+# Ignore object files
+*.o
+
+# Ignore specific directories
+test_data/
+node_modules/
+
+# Ignore all files in a specific directory
+some_directory/*
+
+# Ignore log files
+*.log
