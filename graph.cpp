@@ -6,6 +6,8 @@
 #include "stack.h"
 using namespace std;
 
+int sourceVer;
+
 void initSingleSource(pVertex* V, int vertices, int source) {
     // Initialize single source for Dijkstra's algorithm
     for (int i = 0; i < vertices; ++i) {
@@ -15,34 +17,31 @@ void initSingleSource(pVertex* V, int vertices, int source) {
     V[source]->key = 0; // Set key of source vertex to 0
 }
 
-// u and v are pointers to the vertex and w is the weight of the edge between them.
-void relax(pVertex u, pVertex v, double w)
-{
-    if(v->key > u->key + w)
-    {
-        v->key = u->key + w; // vertex is updated to new value
-        v->pi = u->id; // predecessor of v is to the id of u
+bool relax(pVertex u, pVertex v, double w) {
+    double newKey = u->key + w;
+    if (v->key > newKey) {
+        cout << "Relaxing vertex " << v->id << " from key " << v->key << " to new key " << newKey << endl;
+        v->key = newKey;  // Make sure the key is updated here
+        v->pi = u->id;
+        return true;
     }
+    return false;
 }
 
 void singleSource(pVertex* V, int vertices, int source, pEdge* adjList)
 {
+    // sourceVer = source;
+    // ifsinglesource = true;
     initSingleSource(V, vertices, source);
 
     pHEAP heap = init(vertices); // priority queue - min heap
     STACK *stack = init();
 
-    // if(heap == NULL)
-    // {
-    //     cout << "Priority Queue not initialized." << endl;
-    //     return;
-    // }
-
-    // if(stack == NULL)
-    // {
-    //     cout << "stack not initialized." << endl;
-    //     return;
-    // }
+    if(heap == NULL || stack == NULL)
+    {
+        cout << "Error." << endl;
+        return;
+    }
 
     for(int i = 0; i<vertices; i++)
     {
@@ -62,20 +61,18 @@ void singleSource(pVertex* V, int vertices, int source, pEdge* adjList)
         VERTEX* u = extractMin(heap);
         push(stack,u);
 
-        for(pEdge edg = adjList[u->id]; edg != NULL; edg = edg->next)
+        for (pEdge edg = adjList[u->id]; edg != NULL; edg = edg->next) 
         {
             pVertex v = V[edg->v];
-            if(v->key > u->key + edg->w)
+            if (relax(u, v, edg->w)) 
             {
-                relax(u,v,edg->w);
-                //cout << "Able to relax" <<endl;
-                decreaseKey(heap, v->position, v->key);
+                if(v->key < u->key + edg->w)
+                {
+                    decreaseKey(heap, v->position, v->key);
+                }
             }
-            //cout << "inside for loop" << endl;
         }
-        //cout << "after push for loop\n" << endl;
     }
-    //cout << "single source in graph in while after while" << endl;
 
     VERTEX* pVertex;
     for(int i = 0; i < vertices; i ++)

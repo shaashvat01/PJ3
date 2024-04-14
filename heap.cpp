@@ -14,7 +14,7 @@ HEAP* init(int capacity) {
     }
     // initializing capacity, size and new element for the heap.
 
-    heap->A = new ELEMENT*[capacity];
+    heap->A = new VERTEX*[capacity];
 
     // if NULL return error
     if (heap->A == NULL) {
@@ -24,7 +24,7 @@ HEAP* init(int capacity) {
     }
     // adding elements to the heap.
     for (int i = 0; i < capacity; i++) {
-        ELEMENT* newElement = new ELEMENT;
+        VERTEX* newElement = new VERTEX;
         heap->A[i] = newElement; 
     }
     heap->capacity = capacity;
@@ -140,89 +140,78 @@ VERTEX* extractMin(HEAP* heap)
     return minVertex; // Return the vertex with the minimum key
 }
 
-void decreaseKey(HEAP* heap, int id, double newKey)
-{
-    // Check if the heap pointer is valid.
-    if (heap == NULL) {
-        cout << "Error: heap is NULL" << endl;
+void decreaseKey(HEAP* heap, int position, double newKey) {
+    if (!heap || position < 0 || position >= heap->size) {
+        cout << "DecreaseKey Error: Invalid position or heap is null." << endl;
         return;
     }
 
-    // Check if the heap size is valid for operation.
-    if (heap->size <= 0) {
-        cout << "Error: heap size is zero" << endl;
+    VERTEX* v = heap->A[position];
+    cout << "DecreaseKey called for Vertex " << v->id << " at position " << position 
+         << " to change key from " << v->key << " to " << newKey << endl;
+
+    if (v->key <= newKey) {
+        cout << "DecreaseKey Error: New key " << newKey << " is not smaller than current key " << v->key << endl;
         return;
     }
 
-    // Check if the index is within the bounds of the heap array.
-    if (id < 0 || id >= heap->size) {
-        cout << "Error: invalid index in DecreaseKey - " << id << " out of bounds [0, " << heap->size - 1 << "]" << endl;
-        return;
-    }
-
-    // Check if the new key is actually smaller than the current key.
-    if (heap->A[id]->key <= newKey) {
-        cout << "Error: new key is not smaller than the current key" << endl;
-        return;
-    }
-
-    // Update the key of the vertex.
-    heap->A[id]->key = newKey;
-
-    // Bubble up the element to restore the heap property if necessary.
-    int current = id;
-    while (current > 0) {
-        int parentIndex = (current - 1) / 2;
-        if (heap->A[parentIndex]->key > heap->A[current]->key) {
-            // Swapping the current element with its parent.
-            pVertex temp = heap->A[current];
-            heap->A[current] = heap->A[parentIndex];
-            heap->A[parentIndex] = temp;
-
-            // Update current index to parent index after swap.
-            current = parentIndex;
-        } else {
-            // If the parent's key is not greater, the heap property is restored.
-            break;
-        }
+    // Update the key
+    v->key = newKey;
+    int i = position;
+    while (i > 0 && heap->A[(i-1)/2]->key > heap->A[i]->key) {
+        VERTEX* temp = heap->A[i];
+        heap->A[i] = heap->A[(i-1)/2];
+        heap->A[(i-1)/2] = temp;
+        i = (i-1)/2;
     }
 }
 
 
-
-// //Decrease key value
 // void decreaseKey(HEAP* heap, int id, double newKey)
 // {
-    
-//     // if heap is NULL return error.
-//     if(heap == NULL)
-//     {
+
+//     VERTEX* v = heap->A[id];
+//     if (v->key < newKey) {
+//         return;  // Exit if the new key is not actually smaller
+//     }
+
+//     // Check if the heap pointer is valid.
+//     if (heap == NULL) {
 //         cout << "Error: heap is NULL" << endl;
 //         return;
 //     }
-//     // if heap size is equal to 0 then return.
-//     // if(heap->size <= 0)
-//     // {
-//     //     return;
-//     // }
 
-//     id--;
-
-//     if (heap->size == 0 || id >= heap->size || id < 0) {
-//         cout << "Error: invalid call to DecreaseKey" << endl;
+//     // Check if the heap size is valid for operation.
+//     if (heap->size <= 0) {
+//         cout << "Error: heap size is zero" << endl;
 //         return;
 //     }
 
+//     // Check if the new key is actually smaller than the current key.
+//     if (heap->A[id]->key <= newKey) {
+//         cout << "Error: new key is not smaller than the current key" << endl;
+//         return;
+//     }
+
+//     // Update the key of the vertex.
 //     heap->A[id]->key = newKey;
 
-//     // rearranging to maintain min heap property.
-//     while(id != 0 && heap->A[(id-1)/2]->key > heap->A[id]->key) {
-//         // swapping A[i] with A[(i-1)/2] or child with parent.
-//         pVertex temp = heap->A[id];  // temporary holder temp.
-//         heap->A[id] = heap->A[(id-1)/2];
-//         heap->A[(id-1)/2] = temp;
+//     // Bubble up the element to restore the heap property if necessary.
+//     int current = id;
+//     while (current > 0) {
+//         int parentIndex = (current - 1) / 2;
+//         if (heap->A[parentIndex]->key > heap->A[current]->key) {
+//             // Swapping the current element with its parent.
+//             pVertex temp = heap->A[current];
+//             heap->A[current] = heap->A[parentIndex];
+//             heap->A[parentIndex] = temp;
 
-//         id = (id-1)/2; // updating i.
+//             // Update current index to parent index after swap.
+//             current = parentIndex;
+//         } else {
+//             // If the parent's key is not greater, the heap property is restored.
+//             break;
+//         }
 //     }
 // }
 
