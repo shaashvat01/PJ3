@@ -1,52 +1,50 @@
 #ifndef _data_structures_h
 #define _data_structures_h 1
 
-enum class COLOR {
-    White, // Vertex not visted
-    Gray,  // in process
-    Black  // visited
-};
+typedef struct COLOR{
+    char color;//color for vertex
+}COLOR;
 
-typedef struct GRAPH_VERTEX
-{
+typedef struct TAG_VERTEX{
     int id;
-    COLOR color;
-    double key;
-    int pi;
+    COLOR color; // color for discovered undiscovered 
+    double key; //
+    int previous;
     int position;
+    int heappos;
 }VERTEX;
-typedef VERTEX *pVertex;
+typedef VERTEX *pVERTEX;
 
-typedef struct GRAPH_EDGE
-{
-    int id;
-    int u;
-    int v;
-    double w;
-    GRAPH_EDGE *next;
-}EDGE;
-typedef EDGE *pEdge;
+
+typedef struct TAG_NODE{
+    int index; //position
+    int u; //start
+    int v; //end
+    double w; //weight
+    TAG_NODE *next;
+}NODE;
+typedef NODE *pNODE;
 
 typedef VERTEX ELEMENT;
 typedef ELEMENT *pELEMENT;
 
-typedef struct TAG_HEAP
-{
+typedef struct TAG_HEAP{
     int capacity;
     int size;
     pELEMENT *A;
 }HEAP;
-typedef HEAP *pHEAP;
 
-typedef struct TAG_STACK
-{
-    pVertex vertex;
-    struct TAG_STACK* next;
-}TAG_STACK;
 
-typedef struct STACK
-{
-    TAG_STACK* head;
-}STACK;
+
+typedef struct TAG_STACK_NODE {
+    VERTEX* ver;
+    TAG_STACK_NODE* next;
+} STACK_NODE;
+
+typedef struct TAG_STACK {
+    STACK_NODE** S; // Array of Stack nodes
+    STACK_NODE* top; // Pointer to the top of the stack
+    int size;        // Current size of the stack
+} STACK;
 
 #endif

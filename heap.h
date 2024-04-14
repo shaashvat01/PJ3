@@ -1,13 +1,13 @@
-#ifndef heap_h
-#define heap_h 1
+#ifndef _heap_cpp
+#define _heap_cpp
 #include "data_structures.h"
 
-HEAP* init(int capacity);   // initialize a new heap.
-void buildH(HEAP* heap);    // build heap
-void heapify(HEAP* heap, int i);    // heapify - arrange elements in order as min heap.
-void insertH(HEAP* heap, VERTEX* pVertex);   // insert element in heap
-VERTEX* extractMin(HEAP *heap);    // get minimum value from the heap.
-void decreaseKey(HEAP* heap, int id, double newKey);    // decrease key.
-void printH(HEAP* heap);    // print heap.
+extern int heapifycalls;
+void buildHeap(HEAP*,int);
+void heapify(HEAP*,int);
+pVERTEX extractMin(HEAP* h);
+void decreaseKey(HEAP*,int,double);
+void insertion(HEAP*,pVERTEX);
+void printHeap(HEAP*);
 
 #endif

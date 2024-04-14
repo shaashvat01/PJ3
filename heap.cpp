@@ -1,237 +1,140 @@
-#include <iostream>
-#include <iomanip>
 #include "heap.h"
 #include "data_structures.h"
+#include <iostream>
 using namespace std;
 
-// Initialize heap
-HEAP* init(int capacity) {
-    HEAP *heap = new HEAP;  // new heap
-    // return NULL if not initialized.
-    if (heap == NULL) {
-        cout << "Memory allocation failed." << endl;
+// heapifycalls for counting number of heapify calls
+int  heapifycalls = 0;
+
+void heapify(HEAP* h, int i) {
+    int smallest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+
+    // Check if left child is smaller than parent
+    if (left < h->size && h->A[left]->key < h->A[smallest]->key) {
+        smallest = left;
+    }
+
+    // Check if right child is smaller than smallest so far
+    if (right < h->size && h->A[right]->key < h->A[smallest]->key) {
+        smallest = right;
+    }
+
+    // If smallest is not the root
+    if (smallest != i) {
+        // Swap vertices
+        pVERTEX temp = h->A[i];
+        int temp_heappos = h->A[i]->heappos;
+
+        h->A[i] = h->A[smallest];
+        h->A[i]->heappos = temp_heappos;
+
+        h->A[smallest] = temp;
+        h->A[smallest]->heappos = smallest;
+
+        // Recursively heapify the affected subtree
+        heapify(h, smallest);
+    }
+}
+
+void buildHeap(HEAP* h, int n){
+    int i = n/2-1;
+    for(int r = i;r>=0;r--){
+        heapify(h,r);
+        heapifycalls++;
+    }
+}
+
+pVERTEX extractMin(HEAP* h) {
+    if (h == NULL) {
+        cout << "Error: heap is Null";
         return NULL;
     }
-    // initializing capacity, size and new element for the heap.
-
-    heap->A = new VERTEX*[capacity];
-
-    // if NULL return error
-    if (heap->A == NULL) {
-        cout << "Memory allocation failed." << endl;
-        delete heap; // delete heap to clear memeory.
+    if (h->size <= 0) {
+        fprintf(stderr, "Error: heap is empty\n");
         return NULL;
     }
-    // adding elements to the heap.
-    for (int i = 0; i < capacity; i++) {
-        VERTEX* newElement = new VERTEX;
-        heap->A[i] = newElement; 
-    }
-    heap->capacity = capacity;
-    heap->size = 0;
-    return heap;
+    pVERTEX minVertex = h->A[0];
+    h->size = h->size - 1;
+    h->A[0] = h->A[h->size]; // Replace the root with the last element
+    h->A[0]->heappos = 0; // Update heappos for the root vertex
+    heapify(h, 0); // Heapify the heap from the root
+
+    printf("ExtractMin: %d\n", minVertex->id);
+    return minVertex;
 }
 
-// build min heap
-void buildH(HEAP* heap)
-{
-    int n = heap->size; // n = size of heap.
-    for(int i = (n/2)-1; i>=0; i--)
-    {
-        heapify(heap, i);   // calling the heapify to maintain min heap.
-    }
-}
-
-// heapify
-void heapify(HEAP* heap, int i)
-{
-    int n = heap->size;
-    int min = i;    // initializing min.
-    int left = 2 * i + 1;   // left child.
-    int right = 2 * i + 2;  // right child.
-
-    if(left < n)
-    {
-        if(heap->A[left]->key < heap->A[min]->key)
-        {
-            min = left;
-        }
-    }
-
-    if(right < n)
-    {
-        if(heap->A[right]->key < heap->A[min]->key)
-        {
-            min = right;
-        }
-    }
-
-    if(min != i)    // if minimum value changes, then we swap it with i.
-    {
-        // Swapping A[i] and A[min]
-        ELEMENT* temp = heap->A[i];  // temporary holder temp.
-        heap->A[i] = heap->A[min];
-        heap->A[min] = temp;
-        heapify(heap, min);  // calling heapify to maintain min heap property.
-    }
-
-    for(int i = 0; i < heap->size; i++)
-    {
-        heap->A[i]->position = i;
-    }
-}
-
-// insert in heap
-void insertH(HEAP* heap, VERTEX* pVertex)
-{
-    // If heap is NULL return error.
-    if(heap == NULL)
-    {
-        cout << "Error: heap is NULL" << endl;
-        return;
-    }
-    // If the size of heap excedes its capacity then return.
-    if(heap->size == heap->capacity)
-    {
-        return;
-    }
-    
-    heap->A[heap->size] = pVertex;  // add new key at the end of the heap.
-    int i = heap->size;  // set i.
-    heap->size++;   // increment size to incorporate new element.
-    
-    // rearranging to maintain min heap property.
-    while (i > 0 && heap->A[(i-1)/2]->key > heap->A[i]->key) {
-        // swapping A[i] with A[(i-1)/2] or child with parent.
-        ELEMENT* temp = heap->A[i];  // temporary holder temp.
-        heap->A[i] = heap->A[(i-1)/2];
-        heap->A[(i-1)/2] = temp;
-
-        i = (i-1)/2; // updating i.
-    }
-}
-
-// ExtractMin - get minimum value from the heap     // This code is updated to correctly return vertex
-VERTEX* extractMin(HEAP* heap)
-{
-    // if heap is NULL return error.
-    if(heap == NULL)
-    {
-        cout << "Error: heap is NULL" << endl;
-        return NULL;
-    }
-    // if heap size is < 0 return.
-    if(heap->size <= 0)
-    {
-        return NULL;
-    }
-    // Save the vertex with the minimum key value
-    VERTEX* minVertex = heap->A[0];
-
-    // Replace the root of the heap with the last element
-    heap->A[0] = heap->A[heap->size - 1];
-    heap->size--; // Decrease the size of the heap
-
-    if(heap->size > 0)
-    {
-        heapify(heap, 0);
-    }
-
-    return minVertex; // Return the vertex with the minimum key
-}
-
-void decreaseKey(HEAP* heap, int position, double newKey) {
-    if (!heap || position < 0 || position >= heap->size) {
-        cout << "DecreaseKey Error: Invalid position or heap is null." << endl;
-        return;
-    }
-
-    VERTEX* v = heap->A[position];
-    cout << "DecreaseKey called for Vertex " << v->id << " at position " << position 
-         << " to change key from " << v->key << " to " << newKey << endl;
-
-    if (v->key <= newKey) {
-        cout << "DecreaseKey Error: New key " << newKey << " is not smaller than current key " << v->key << endl;
-        return;
-    }
-
-    // Update the key
-    v->key = newKey;
+void decreaseKey(HEAP* h, int position, double newKey) {
     int i = position;
-    while (i > 0 && heap->A[(i-1)/2]->key > heap->A[i]->key) {
-        VERTEX* temp = heap->A[i];
-        heap->A[i] = heap->A[(i-1)/2];
-        heap->A[(i-1)/2] = temp;
-        i = (i-1)/2;
+
+    if (h == NULL) {
+        cout << "Error: heap is Null" << endl;
+        return;
+    }
+
+    if (h->size == 0 || i >= h->size || i < 0) {
+        cout << "Error: invalid call to DecreaseKey" << endl;
+        return;
+    }
+
+    if (newKey > h->A[i]->key) {
+        cout << "Error: new key is not smaller than the current key" << endl;
+        return;
+    }
+
+    h->A[i]->key = newKey;
+    while (i != 0 && h->A[(i - 1) / 2]->key > h->A[i]->key) {
+        // Swap vertices
+        pVERTEX temp = h->A[i];
+        int temp_heappos = h->A[i]->heappos;
+
+        h->A[i] = h->A[(i - 1) / 2];
+        h->A[i]->heappos = temp_heappos;
+
+        h->A[(i - 1) / 2] = temp;
+        h->A[(i - 1) / 2]->heappos = (i - 1) / 2;
+
+        i = (i - 1) / 2;
     }
 }
 
-
-// void decreaseKey(HEAP* heap, int id, double newKey)
-// {
-
-//     VERTEX* v = heap->A[id];
-//     if (v->key < newKey) {
-//         return;  // Exit if the new key is not actually smaller
-//     }
-
-//     // Check if the heap pointer is valid.
-//     if (heap == NULL) {
-//         cout << "Error: heap is NULL" << endl;
-//         return;
-//     }
-
-//     // Check if the heap size is valid for operation.
-//     if (heap->size <= 0) {
-//         cout << "Error: heap size is zero" << endl;
-//         return;
-//     }
-
-//     // Check if the new key is actually smaller than the current key.
-//     if (heap->A[id]->key <= newKey) {
-//         cout << "Error: new key is not smaller than the current key" << endl;
-//         return;
-//     }
-
-//     // Update the key of the vertex.
-//     heap->A[id]->key = newKey;
-
-//     // Bubble up the element to restore the heap property if necessary.
-//     int current = id;
-//     while (current > 0) {
-//         int parentIndex = (current - 1) / 2;
-//         if (heap->A[parentIndex]->key > heap->A[current]->key) {
-//             // Swapping the current element with its parent.
-//             pVertex temp = heap->A[current];
-//             heap->A[current] = heap->A[parentIndex];
-//             heap->A[parentIndex] = temp;
-
-//             // Update current index to parent index after swap.
-//             current = parentIndex;
-//         } else {
-//             // If the parent's key is not greater, the heap property is restored.
-//             break;
-//         }
-//     }
-// }
-
-// Printing heap
-void printH(HEAP* heap)
-{
-    // if NULL return error.
-    if(heap == NULL)
-    {
-        cout << "Error: heap is NUll" << endl;
+void insertion(HEAP* h, pVERTEX newKey) {
+    if (h->capacity == 0) {
+        cout << "Error: heap is Empty";
         return;
     }
-    // if not then print the contents of heap.
-    else
-    {
-        fprintf(stdout, "%d", heap->size);  // size of heap.
-        for(int i = 0; i < heap->size; i++)
-        {
-            fprintf(stdout, "\n");
-            fprintf(stdout, "%lf", heap->A[i]->key);
-        }
+    if (h->size == h->capacity) {
+        cout << "Error: heap is full";
+        return;
+    } 
+    if (h->A[0] == NULL) fprintf(stderr, "0 is NULL.\n");
+    h->A[h->size] = newKey;
+    newKey->heappos = h->size; // Set heappos for the new vertex
+    h->size++;
+    int i = h->size - 1;
+    while (i > 0 && h->A[(i - 1) / 2]->key > h->A[i]->key) {
+        // Swap vertices
+        pVERTEX temp = h->A[i];
+        int temp_heappos = h->A[i]->heappos;
+
+        h->A[i] = h->A[(i - 1) / 2];
+        h->A[i]->heappos = temp_heappos;
+
+        h->A[(i - 1) / 2] = temp;
+        h->A[(i - 1) / 2]->heappos = (i - 1) / 2;
+
+        i = (i - 1) / 2;
+    }
+    return ;
+}
+
+void printHeap(HEAP* h) {
+    if (h == NULL) {
+        fprintf(stderr, "heap is empty .\n");
+        return; //cout<<"Error: heap is NUll"<<endl;
+    } 
+    for (int i = 0; i < h->size; i++) {
+        printf("index : %d, heappos: %d, Distance :%lf\n", h->A[i]->id, h->A[i]->heappos,h->A[i]->key);
     }
 }

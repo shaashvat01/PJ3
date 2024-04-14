@@ -1,10 +1,8 @@
-#ifndef stack_h
-#define stack_h 1
+#ifndef _stack_cpp
+#define _stack_cpp
 #include "data_structures.h"
 
-STACK* init();
-void push(STACK* stack, pVertex vertex);
-pVertex pop(STACK* stack);
-bool empty(STACK* stack);
+void push(STACK*,VERTEX*);
+VERTEX* pop(STACK*);
 
 #endif

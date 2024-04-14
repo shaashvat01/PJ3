@@ -1,195 +1,187 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "util.h"
-#include "data_structures.h"
-#include "graph.h"
-#include "heap.h"
 #include <iostream>
-#include <iomanip>
-using namespace std; 
+#include <fstream>
+#include <sstream>
+#include "util.h"
+#include "heap.h"
+#include "graph.h"
+using namespace std;
 
-
-int main(int argc, char **argv)
-{
-    FILE *fp; //File object
-    HEAP *myHEAP; //Heap object
-
-    // user argument
-    int num1, num2;
-    
-    //sample variable for debug
-    int v;
-    int w;
-    int x;
-    int y;
-    
-    //Input variables 
-    int numV;
-    int numE;
-    char Word[100];
-
+int main(int argc, char **argv){
+    FILE *fp = NULL;
+    int ver1;
+    int ver2;
     int returnV;
+    char Word[100];
+    int numEdge = 0;
+    int numVer=0;
 
     if (argc < 3){
-        fprintf(stderr, "Usage: %s <InputFile> <GraphType> <flag> \n", argv[0]);
+        fprintf(stderr, "Usage: %s <inputfile> <Graphtype> <Flag> \n", argv[0]);
         exit(0);
     }
-
-    fp = fopen(argv[1], "r");
-    if(fp == NULL)
-    {
-        fprintf(stderr,"File not found\n");
-        return 0;
-    }
-
-    fscanf(fp, "%d %d", &numV, &numE);
-
-    // Allocate memory for vList and adjList after reading numV and numE
-    pVertex* list = new pVertex[numV];
-    pEdge* adjList = new pEdge[numV];
-
-    for (int i = 0; i < numV; i++) {
-        // Allocate memory for each VERTEX object
-        list[i] = new VERTEX;
-        list[i]->id = i; // Set the index of the vertex
-    }
-
-    // Read the remaining lines
-    for (int i =1; i <=numE; ++i) {
-        int edgeIndex, u, v;
-        double weight;
-        fscanf(fp, "%d %d %d %lf", &edgeIndex, &u, &v, &weight);
-
-        // Create a new node for the edge
-        pEdge newNode = new EDGE;
-        newNode->id = edgeIndex;
-        newNode->u = u;
-        newNode->v = v;
-        newNode->w = weight;
-        newNode->next = nullptr;
-
-        // Insert the new node into the appropriate adjacency list based on the flag and graph type
-        if (strcmp(argv[2], "DirectedGraph") == 0 || strcmp(argv[2], "UndirectedGraph") == 0) 
-        {
-            if (strcmp(argv[3], "1") == 0) {
-                // Insert at the front of adjList[u]
-                newNode->next = adjList[u];
-                adjList[u] = newNode;
-            }
-            if (strcmp(argv[2], "UndirectedGraph") == 0 && strcmp(argv[3], "1") == 0) {
-                // Also insert at the front of adjList[v] for undirected graphs
-                pEdge newNodeV = new EDGE;
-                newNodeV->id = edgeIndex;
-                newNodeV->u = v;
-                newNodeV->v = u;
-                newNodeV->w = weight;
-                newNodeV->next = adjList[v];
-                adjList[v] = newNodeV;
-            }
-        } 
-        else if (strcmp(argv[3], "2") == 0) 
-        {
-            if (strcmp(argv[2], "DirectedGraph") == 0 || strcmp(argv[2], "UndirectedGraph") == 0) 
-            {
-                // Insert at the rear of adjList[u]
-                if (!adjList[u]) 
-                {
-                    adjList[u] = newNode;
-                } 
-                else 
-                {
-                    pEdge current = adjList[u];
-                    while (current->next) 
-                    {
-                        current = current->next;
-                    }
-                    current->next = newNode;
+    fp = fopen(argv[1],"r");
+    ifstream file(argv[1]);
+    if(fp){
+        string line;
+        int num1,num2;
+        getline(file, line) ;
+            istringstream iss(line);
+                if (iss >> num1 >> num2) {
+                    numEdge = num2;
+                    numVer = num1;
                 }
-            }
-            if (strcmp(argv[2], "UndirectedGraph") == 0 && strcmp(argv[3], "2") == 0) 
-            {
-                // Also insert at the rear of adjList[v] for undirected graphs
-                pEdge newNodeV = new EDGE;
-                newNodeV->id = edgeIndex;
-                newNodeV->u = v;
-                newNodeV->v = u;
-                newNodeV->w = weight;
-                if (!adjList[v])
-                {
-                    adjList[v] = newNodeV;
-                } 
-                else 
-                {
-                    pEdge current = adjList[v];
-                    while (current->next) 
-                    {
-                        current = current->next;
-                    }
-                    current->next = newNodeV;
-                }
-            }
-        }
     }
-
-    // Close the file
     fclose(fp);
 
-    while(1)
-    {
-        returnV = nextInstruction(Word, &num1, &num2);
-        if(returnV == 0)
-        {
+    fp = fopen(argv[1],"r");
+    pNODE *ADJ = new pNODE[numVer];
+    for (int i = 0; i < numVer; i++) {
+        ADJ[i] = NULL; // Allocate memory for each element
+    }
+    pVERTEX *vertexList = new pVERTEX[numVer];
+    for(int i=0;i<numVer;i++){
+        vertexList[i] = new VERTEX;
+        vertexList[i]->id = i+1;
+    }
+    if(fp){
+        string line2;
+        int index,u,v;
+        double w;
+        while (getline(file, line2)) {
+            istringstream iss(line2);
+            iss >> index >> u >> v >> w;
+            pNODE newEdge = new NODE;
+            newEdge->index = index;
+            newEdge->u = u;
+            newEdge->v = v;
+            newEdge->w = w;
+
+                if(strcmp(argv[2], "DirectedGraph") == 0){
+                    //directed
+                    if(ADJ[u-1] == NULL){
+                        //fprintf(stderr,"I was here ADJ[u] == NULL\n");
+                        ADJ[u-1] = newEdge; // add the new edge to the front of the list
+                    }else{
+                        if(strcmp(argv[3], "1")==0){
+                            // directed + flag 1
+                                newEdge->next = ADJ[u - 1];
+                                ADJ[u - 1] = newEdge; // Update head of the list
+                                //fprintf(stderr,"flag 1 not NULL\n");
+                        }else{
+                            //directed + flag 2
+                            pNODE loop = ADJ[u - 1];
+                            while (loop->next != NULL) {
+                                loop = loop->next;
+                            }
+                            loop->next = newEdge; // Add to the rear
+                        }
+                    }
+                }else {
+                    pNODE otherEdge = new NODE;
+                    otherEdge->index = index;
+                    otherEdge->v = u;
+                    otherEdge->u = v;
+                    otherEdge->w = w;
+
+                    if (ADJ[u - 1] == NULL && ADJ[v - 1] == NULL) {
+                    // Both vertices have empty adjacency lists
+                    ADJ[u - 1] = newEdge;
+                    ADJ[v - 1] = otherEdge;
+                    } else if (ADJ[u - 1] == NULL && ADJ[v - 1] != NULL) {
+                    // Vertex u has an empty adjacency list
+                    ADJ[u - 1] = newEdge;
+                    pNODE loop2 = ADJ[v - 1];
+                        while (loop2->next != NULL) {
+                            loop2 = loop2->next;
+                        }
+                        loop2->next = otherEdge;
+                } else if (ADJ[u - 1] != NULL && ADJ[v - 1] == NULL) {
+                // Vertex v has an empty adjacency list
+                    ADJ[v - 1] = otherEdge;
+                    pNODE loop = ADJ[u - 1];
+                        while (loop->next != NULL) {
+                           loop = loop->next;
+                        }
+                        loop->next = newEdge;
+                } else {
+                    // Both vertices have non-empty adjacency lists
+                    if (strcmp(argv[3], "1") == 0) {
+                        // Undirected with flag 1
+                        newEdge->next = ADJ[u - 1];
+                        ADJ[u - 1] = newEdge;
+
+                        otherEdge->next = ADJ[v - 1];
+                        ADJ[v - 1] = otherEdge;
+                    } else {
+                        // Undirected with flag 2
+                        pNODE loop = ADJ[u - 1];
+                        while (loop->next != NULL) {
+                           loop = loop->next;
+                        }
+                        loop->next = newEdge;
+
+                        pNODE loop2 = ADJ[v - 1];
+                        while (loop2->next != NULL) {
+                            loop2 = loop2->next;
+                        }
+                        loop2->next = otherEdge;
+                    }
+                }
+            }
+    }
+    fclose(fp);
+
+    while (1){
+
+        returnV = nextInstruction(Word, &ver1, &ver2);
+        //if the funtion returns 0 the instruction is invalid
+        if (returnV == 0){
             fprintf(stderr, "Warning: Invalid instruction\n");
             continue;
         }
-
-        if(strcmp(Word, "Stop")==0)
-        {
+        // end if STOP is entered
+        if (strcmp(Word, "Stop")==0){
             return 0;
         }
-
-        if (strcmp(Word, "PrintADJ")==0)
-        { 
-           // Print the adjacency lists
-            for (int i = 1; i <= numV; ++i)
-            {
-                printf("ADJ[%d]:-->", i ); // Print the vertex index as ADJ[i]
-                pEdge current = adjList[i];
-                while (current != nullptr) {
-                    printf("[%d %d: %.2lf]", current->u, current->v, current->w); // Print each node in the adjacency list
-                    if (current->next != nullptr) {
-                        printf("-->");
-                    }
-                    current = current->next;
+        // print command is entered
+        if(strcmp(Word, "PrintADJ")==0){
+            for(int i =0; i < numVer ; i++){
+                fprintf(stderr,"ADJ[%d]:-->[%d %d: %f]",i+1,ADJ[i]->u,ADJ[i]->v,ADJ[i]->w);
+                pNODE loop = ADJ[i]->next;
+                while(loop != NULL){
+                    fprintf(stderr,"-->[%d %d: %f]",loop->u,loop->v,loop->w);
+                    loop = loop->next;
                 }
-                printf("\n");
+                fprintf(stderr,"\n");
             }
+
+            continue;
+        }
+        // SinglePair command is entered
+        if(strcmp(Word, "SinglePair")==0){
             continue;
         }
 
-        if (strcmp(Word, "SingleSource") == 0) 
-        {
-            singleSource(list, numV, num1, adjList);
+        //SingleSource commanmd is entered
+        if(strcmp(Word, "SingleSource")==0){
+            initSingleSource(vertexList,numVer,ver1);
+            dijkistra(vertexList,numVer,ver1,ADJ);//pNODE to arrayS
             continue;
         }
 
-        if (strcmp(Word, "SinglePair")==0) 
-        {
-
+        //PrintLength commanmd is entered
+        if(strcmp(Word, "PrintLength")==0){
+            printlength(ver1,ver2);
+            continue;
         }
 
-        if (strcmp(Word, "PrintLength")==0)
-        { 
-
+        if(strcmp(Word, "PrintPath")==0){
+            printPath(ver1,ver2);
+            continue;
         }
-
-        if (strcmp(Word, "PrintPath")==0)
-        { 
-            
-        }
-
-        return 1;
     }
-
+}
 }
