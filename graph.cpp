@@ -60,10 +60,8 @@ void singleSource(pVertex* V, int vertices, int vSource, pEDGE* adjList, int des
     while(heap->size!=0){
         pVertex newV = extractMin(heap);
         push(stack,newV);
-        printf("Outside if");
         if(destination == newV->id)
         {
-            printf("Inside if");
             break;
         }
         //printf("index of extract min vertex %d.\n",newV->id);
