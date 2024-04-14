@@ -3,11 +3,11 @@
 #include "data_structures.h"
 
 extern int heapifycalls;
-void buildHeap(HEAP*,int);
+void buildH(HEAP* h,int n);
 void heapify(HEAP*,int);
-pVERTEX extractMin(HEAP* h);
+pVertex extractMin(HEAP* h);
 void decreaseKey(HEAP*,int,double);
-void insertion(HEAP*,pVERTEX);
-void printHeap(HEAP*);
+void insertH(HEAP*,pVertex);
+void printH(HEAP*);
 
 #endif

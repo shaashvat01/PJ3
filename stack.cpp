@@ -1,34 +1,36 @@
 #include "stack.h"
 #include "data_structures.h"
 #include <iostream>
-#include <vector>
-
 using namespace std;
 
-void push(STACK* s, VERTEX* v){
-    s->size++;
-    STACK_NODE* newNode = (STACK_NODE*)malloc(sizeof(STACK_NODE));
-    pVERTEX newVer = v;
-    newNode->ver = v;
-    newNode->next = NULL;
-    if(s->top == NULL){
-        s->top = newNode;
-    }else{
-        newNode->next = s->top;
-        s->top = newNode;
+void push(STACK* Stack, VERTEX* vertex)
+{
+    Stack->size++;
+    STACK_EDGE* node = (STACK_EDGE*)malloc(sizeof(STACK_EDGE));
+    pVertex newV = vertex;
+    node->vertex = vertex;
+    node->next = NULL;
+    if(Stack->head == NULL)
+    {
+        Stack->head = node;
     }
-    printf("Pushed into stack.\n");
+    else
+    {
+        node->next = Stack->head;
+        Stack->head = node;
+    }
 }
 
-
-VERTEX* pop(STACK* s){
-    if(s->top == nullptr){
-        std::cout<<"The stack is empty"<<std::endl;
-        return nullptr;
+VERTEX* pop(STACK* Stack)
+{
+    if(Stack->head == NULL)
+    {
+        cout << "The stack is empty" << endl;
+        return NULL;
     }
-    STACK_NODE* old = s->top;
-    VERTEX* dat = s->top->ver;
-    s->top = s->top->next;
-    delete old; 
-    return dat;
+    STACK_EDGE* edge = Stack->head;
+    VERTEX* newV = Stack->head->vertex;
+    Stack->head = Stack->head->next;
+    delete edge; 
+    return newV;
 }

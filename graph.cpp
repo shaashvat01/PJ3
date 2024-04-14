@@ -5,102 +5,98 @@
 #include "stack.h"
 using namespace std;
 
-int sourceVertex = 0;
+int num1 = 0;
 int destination = 0;
-bool ifsinglesource = false;
+bool check1 = false;
 
-void initSingleSource(pVERTEX* V, int numVer, int source) {
+void initSingleSource(pVertex* V, int vertices, int source) {
     // Initialize single source for Dijkstra's algorithm
-    for (int i = 0; i < numVer; i++) {
+    for (int i = 0; i < vertices; i++) {
         V[i]->key = INFINITY; // Set initial key values to infinity
-        V[i]->previous = -1; // Set initial predecessor to NIL
-        // printf("index: %d\n",V[i]->index);
-        // printf("Distance: %lf\n\n",V[i]->distance);
+        V[i]->prev = -1; // Set initial predecessor to NIL
     }
     V[source-1]->key = 0; // Set key of source vertex to 0
 }
 
 // u and v are pointers to the vertex and w is the weight of the edge between them.
-bool relax(pVERTEX u, pVERTEX v, double w) {
-    bool ifchanged = false;
-    if (v->key > u->key + w) {
-        ifchanged = true;
-        v->key = u->key + w; // Update vertex v's distance
-        v->previous = u->id; // Set vertex v's predecessor to the index of vertex u
+bool relax(pVertex start, pVertex end, double weight) {
+    bool check = false;
+    if (end->key > start->key + weight) {
+        check = true;
+        end->key = start->key + weight; // Update vertex v's distance
+        end->prev = start->id; // Set vertex v's predecessor to the index of vertex u
     }
-    return ifchanged;
+    return check;
 }
 
-
-
-void dijkistra(pVERTEX* V, int numver, int sourceVer, pNODE* adjList){
-    sourceVertex = sourceVer;
-    ifsinglesource = true;
+void singleSource(pVertex* V, int vertices, int vSource, pEDGE* adjList){
+    num1 = vSource;
+    check1 = true;
 
     HEAP* heap = new HEAP; // priority queue - min heap
-    heap->capacity = numver;
+    heap->capacity = vertices;
     heap->size = 0;
     heap->A = new VERTEX*[heap->capacity];
     for(int i=0;i<heap->capacity;i++){
         heap->A[i] = new VERTEX;
     }
     STACK* stack = new STACK; //new stack
-    stack->size = numver;
-    stack->S = new STACK_NODE*[numver];
-    for(int i = 0; i < numver; i++) {
-        stack->S[i] = new STACK_NODE; // Allocate memory for each stack node
-        stack->S[i]->ver = new VERTEX; // Allocate memory for the vertex
+    stack->size = vertices;
+    stack->Stack = new STACK_EDGE*[vertices];
+    for(int i = 0; i < vertices; i++) {
+        stack->Stack[i] = new STACK_EDGE; // Allocate memory for each stack node
+        stack->Stack[i]->vertex = new VERTEX; // Allocate memory for the vertex
     }
     if(heap == NULL){
         printf("Error: Failed to allocate memory for HEAP.\n");
         return;
     }
 
-    for(int i=0;i<numver;i++){
-        insertion(heap,V[i]);
+    for(int i=0;i<vertices;i++){
+        insertH(heap,V[i]);
     }
-    printHeap(heap);
-    printf("here");
+    printH(heap);
+    
     while(heap->size!=0){
-        pVERTEX newV = extractMin(heap);
+        pVertex newV = extractMin(heap);
         push(stack,newV);
-        printf("index of extract min vertex %d.\n",newV->id);
-        pNODE edge = adjList[newV->id-1]; 
+        //printf("index of extract min vertex %d.\n",newV->id);
+        pEDGE edge = adjList[newV->id-1]; 
         int nodecount = 1;
         while(edge->next!=NULL){
             edge = edge->next;
             nodecount++;
         }
-        pNODE Edge = adjList[newV->id-1];
+        pEDGE Edge = adjList[newV->id-1];
         for(int j= 0;j<nodecount;j++){
-            if(relax(newV,V[Edge->v-1],Edge->w)){
-                decreaseKey(heap,V[Edge->v-1]->heappos,newV->key + Edge->w);
+            if(relax(newV,V[Edge->end-1],Edge->weight)){
+                decreaseKey(heap,V[Edge->end-1]->h_pos,newV->key + Edge->weight);
             }
             Edge = Edge->next;
         }
         heapify(heap,0);
-        printHeap(heap);
+        printH(heap);
     }
 }
 
-void initSinglePair(pVERTEX* V, int n, int source, int destination) {
+void initSinglePair(pVertex* V, int n, int source, int destination) {
     for (int i = 1; i <= n; i++) {
         if (i == source) {
             V[i]->key = 0; // Set key of source vertex to 0
         } else {
             V[i]->key = INFINITY; // Set initial key values to infinity
         }
-        V[i]->previous = -1; // Set initial predecessor to NIL
+        V[i]->prev = -1; // Set initial predecessor to NIL
     }
 }
 
 void printlength(int s, int t){
-    if(ifsinglesource){
-        if(sourceVertex != s){
+    if(check1){
+        if(num1 != s){
             return ;
         }
     }else{
-        if(sourceVertex != s && destination != t){
+        if(num1 != s && destination != t){
             return;
         }
     }

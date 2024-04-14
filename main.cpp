@@ -37,11 +37,11 @@ int main(int argc, char **argv){
     fclose(fp);
 
     fp = fopen(argv[1],"r");
-    pNODE *ADJ = new pNODE[numVer];
+    pEDGE *ADJ = new pEDGE[numVer];
     for (int i = 0; i < numVer; i++) {
         ADJ[i] = NULL; // Allocate memory for each element
     }
-    pVERTEX *vertexList = new pVERTEX[numVer];
+    pVertex *vertexList = new pVertex[numVer];
     for(int i=0;i<numVer;i++){
         vertexList[i] = new VERTEX;
         vertexList[i]->id = i+1;
@@ -53,11 +53,11 @@ int main(int argc, char **argv){
         while (getline(file, line2)) {
             istringstream iss(line2);
             iss >> index >> u >> v >> w;
-            pNODE newEdge = new NODE;
-            newEdge->index = index;
-            newEdge->u = u;
-            newEdge->v = v;
-            newEdge->w = w;
+            pEDGE newEdge = new EDGE;
+            newEdge->id = index;
+            newEdge->start = u;
+            newEdge->end = v;
+            newEdge->weight = w;
 
                 if(strcmp(argv[2], "DirectedGraph") == 0){
                     //directed
@@ -72,7 +72,7 @@ int main(int argc, char **argv){
                                 //fprintf(stderr,"flag 1 not NULL\n");
                         }else{
                             //directed + flag 2
-                            pNODE loop = ADJ[u - 1];
+                            pEDGE loop = ADJ[u - 1];
                             while (loop->next != NULL) {
                                 loop = loop->next;
                             }
@@ -80,11 +80,11 @@ int main(int argc, char **argv){
                         }
                     }
                 }else {
-                    pNODE otherEdge = new NODE;
-                    otherEdge->index = index;
-                    otherEdge->v = u;
-                    otherEdge->u = v;
-                    otherEdge->w = w;
+                    pEDGE otherEdge = new EDGE;
+                    otherEdge->id = index;
+                    otherEdge->start = u;
+                    otherEdge->end = v;
+                    otherEdge->weight = w;
 
                     if (ADJ[u - 1] == NULL && ADJ[v - 1] == NULL) {
                     // Both vertices have empty adjacency lists
@@ -93,7 +93,7 @@ int main(int argc, char **argv){
                     } else if (ADJ[u - 1] == NULL && ADJ[v - 1] != NULL) {
                     // Vertex u has an empty adjacency list
                     ADJ[u - 1] = newEdge;
-                    pNODE loop2 = ADJ[v - 1];
+                    pEDGE loop2 = ADJ[v - 1];
                         while (loop2->next != NULL) {
                             loop2 = loop2->next;
                         }
@@ -101,7 +101,7 @@ int main(int argc, char **argv){
                 } else if (ADJ[u - 1] != NULL && ADJ[v - 1] == NULL) {
                 // Vertex v has an empty adjacency list
                     ADJ[v - 1] = otherEdge;
-                    pNODE loop = ADJ[u - 1];
+                    pEDGE loop = ADJ[u - 1];
                         while (loop->next != NULL) {
                            loop = loop->next;
                         }
@@ -117,13 +117,13 @@ int main(int argc, char **argv){
                         ADJ[v - 1] = otherEdge;
                     } else {
                         // Undirected with flag 2
-                        pNODE loop = ADJ[u - 1];
+                        pEDGE loop = ADJ[u - 1];
                         while (loop->next != NULL) {
                            loop = loop->next;
                         }
                         loop->next = newEdge;
 
-                        pNODE loop2 = ADJ[v - 1];
+                        pEDGE loop2 = ADJ[v - 1];
                         while (loop2->next != NULL) {
                             loop2 = loop2->next;
                         }
@@ -149,10 +149,10 @@ int main(int argc, char **argv){
         // print command is entered
         if(strcmp(Word, "PrintADJ")==0){
             for(int i =0; i < numVer ; i++){
-                fprintf(stderr,"ADJ[%d]:-->[%d %d: %f]",i+1,ADJ[i]->u,ADJ[i]->v,ADJ[i]->w);
-                pNODE loop = ADJ[i]->next;
+                fprintf(stderr,"ADJ[%d]:-->[%d %d: %f]",i+1,ADJ[i]->start,ADJ[i]->end,ADJ[i]->weight);
+                pEDGE loop = ADJ[i]->next;
                 while(loop != NULL){
-                    fprintf(stderr,"-->[%d %d: %f]",loop->u,loop->v,loop->w);
+                    fprintf(stderr,"-->[%d %d: %f]",loop->start,loop->end,loop->weight);
                     loop = loop->next;
                 }
                 fprintf(stderr,"\n");
@@ -168,7 +168,7 @@ int main(int argc, char **argv){
         //SingleSource commanmd is entered
         if(strcmp(Word, "SingleSource")==0){
             initSingleSource(vertexList,numVer,ver1);
-            dijkistra(vertexList,numVer,ver1,ADJ);//pNODE to arrayS
+            singleSource(vertexList,numVer,ver1,ADJ);//pNODE to arrayS
             continue;
         }
 

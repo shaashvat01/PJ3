@@ -24,21 +24,21 @@ void heapify(HEAP* h, int i) {
     // If smallest is not the root
     if (smallest != i) {
         // Swap vertices
-        pVERTEX temp = h->A[i];
-        int temp_heappos = h->A[i]->heappos;
+        pVertex temp = h->A[i];
+        int temp_heappos = h->A[i]->h_pos;
 
         h->A[i] = h->A[smallest];
-        h->A[i]->heappos = temp_heappos;
+        h->A[i]->h_pos = temp_heappos;
 
         h->A[smallest] = temp;
-        h->A[smallest]->heappos = smallest;
+        h->A[smallest]->h_pos = smallest;
 
         // Recursively heapify the affected subtree
         heapify(h, smallest);
     }
 }
 
-void buildHeap(HEAP* h, int n){
+void buildH(HEAP* h, int n){
     int i = n/2-1;
     for(int r = i;r>=0;r--){
         heapify(h,r);
@@ -46,7 +46,7 @@ void buildHeap(HEAP* h, int n){
     }
 }
 
-pVERTEX extractMin(HEAP* h) {
+pVertex extractMin(HEAP* h) {
     if (h == NULL) {
         cout << "Error: heap is Null";
         return NULL;
@@ -55,10 +55,10 @@ pVERTEX extractMin(HEAP* h) {
         fprintf(stderr, "Error: heap is empty\n");
         return NULL;
     }
-    pVERTEX minVertex = h->A[0];
+    pVertex minVertex = h->A[0];
     h->size = h->size - 1;
     h->A[0] = h->A[h->size]; // Replace the root with the last element
-    h->A[0]->heappos = 0; // Update heappos for the root vertex
+    h->A[0]->h_pos = 0; // Update heappos for the root vertex
     heapify(h, 0); // Heapify the heap from the root
 
     printf("ExtractMin: %d\n", minVertex->id);
@@ -86,20 +86,20 @@ void decreaseKey(HEAP* h, int position, double newKey) {
     h->A[i]->key = newKey;
     while (i != 0 && h->A[(i - 1) / 2]->key > h->A[i]->key) {
         // Swap vertices
-        pVERTEX temp = h->A[i];
-        int temp_heappos = h->A[i]->heappos;
+        pVertex temp = h->A[i];
+        int temp_heappos = h->A[i]->h_pos;
 
         h->A[i] = h->A[(i - 1) / 2];
-        h->A[i]->heappos = temp_heappos;
+        h->A[i]->h_pos = temp_heappos;
 
         h->A[(i - 1) / 2] = temp;
-        h->A[(i - 1) / 2]->heappos = (i - 1) / 2;
+        h->A[(i - 1) / 2]->h_pos = (i - 1) / 2;
 
         i = (i - 1) / 2;
     }
 }
 
-void insertion(HEAP* h, pVERTEX newKey) {
+void insertH(HEAP* h, pVertex newKey) {
     if (h->capacity == 0) {
         cout << "Error: heap is Empty";
         return;
@@ -110,31 +110,31 @@ void insertion(HEAP* h, pVERTEX newKey) {
     } 
     if (h->A[0] == NULL) fprintf(stderr, "0 is NULL.\n");
     h->A[h->size] = newKey;
-    newKey->heappos = h->size; // Set heappos for the new vertex
+    newKey->h_pos = h->size; // Set heappos for the new vertex
     h->size++;
     int i = h->size - 1;
     while (i > 0 && h->A[(i - 1) / 2]->key > h->A[i]->key) {
         // Swap vertices
-        pVERTEX temp = h->A[i];
-        int temp_heappos = h->A[i]->heappos;
+        pVertex temp = h->A[i];
+        int temp_heappos = h->A[i]->h_pos;
 
         h->A[i] = h->A[(i - 1) / 2];
-        h->A[i]->heappos = temp_heappos;
+        h->A[i]->h_pos = temp_heappos;
 
         h->A[(i - 1) / 2] = temp;
-        h->A[(i - 1) / 2]->heappos = (i - 1) / 2;
+        h->A[(i - 1) / 2]->h_pos = (i - 1) / 2;
 
         i = (i - 1) / 2;
     }
     return ;
 }
 
-void printHeap(HEAP* h) {
+void printH(HEAP* h) {
     if (h == NULL) {
         fprintf(stderr, "heap is empty .\n");
         return; //cout<<"Error: heap is NUll"<<endl;
     } 
     for (int i = 0; i < h->size; i++) {
-        printf("index : %d, heappos: %d, Distance :%lf\n", h->A[i]->id, h->A[i]->heappos,h->A[i]->key);
+        printf("index : %d, heappos: %d, Distance :%lf\n", h->A[i]->id, h->A[i]->h_pos,h->A[i]->key);
     }
 }
