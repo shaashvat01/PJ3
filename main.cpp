@@ -162,13 +162,16 @@ int main(int argc, char **argv){
         }
         // SinglePair command is entered
         if(strcmp(Word, "SinglePair")==0){
+            printf("Hello");
+            initSinglePair(vertexList,numVer,ver1,ver2);
+            singleSource(vertexList,numVer,ver1,ADJ,ver2);
             continue;
         }
 
         //SingleSource commanmd is entered
         if(strcmp(Word, "SingleSource")==0){
             initSingleSource(vertexList,numVer,ver1);
-            singleSource(vertexList,numVer,ver1,ADJ);//pNODE to arrayS
+            singleSource(vertexList,numVer,ver1,ADJ, 0);
             continue;
         }
 
@@ -179,7 +182,7 @@ int main(int argc, char **argv){
         }
 
         if(strcmp(Word, "PrintPath")==0){
-            printPath(ver1,ver2);
+            //printPath(ver1,ver2);
             continue;
         }
     }

@@ -29,7 +29,7 @@ bool relax(pVertex start, pVertex end, double weight) {
     return check;
 }
 
-void singleSource(pVertex* V, int vertices, int vSource, pEDGE* adjList){
+void singleSource(pVertex* V, int vertices, int vSource, pEDGE* adjList, int destination){
     num1 = vSource;
     check1 = true;
 
@@ -60,6 +60,12 @@ void singleSource(pVertex* V, int vertices, int vSource, pEDGE* adjList){
     while(heap->size!=0){
         pVertex newV = extractMin(heap);
         push(stack,newV);
+        printf("Outside if");
+        if(destination == newV->id)
+        {
+            printf("Inside if");
+            break;
+        }
         //printf("index of extract min vertex %d.\n",newV->id);
         pEDGE edge = adjList[newV->id-1]; 
         int nodecount = 1;
@@ -88,6 +94,13 @@ void initSinglePair(pVertex* V, int n, int source, int destination) {
         }
         V[i]->prev = -1; // Set initial predecessor to NIL
     }
+}
+
+void singlePair(pVertex* V, int vertices, int source, int destination, pEDGE* adjList) 
+{
+    initSinglePair(V, vertices, source, destination);
+
+    singleSource(V, vertices, source, adjList, destination);
 }
 
 void printlength(int s, int t){
