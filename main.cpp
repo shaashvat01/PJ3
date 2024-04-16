@@ -81,62 +81,73 @@ int main(int argc, char **argv){
                             loop->next = newEdge; // Add to the rear
                         }
                     }
-                }else {
+                }
+                else 
+                {
                     pEDGE otherEdge = new EDGE;
                     otherEdge->id = index;
-                    otherEdge->start = u;
-                    otherEdge->end = v;
+                    otherEdge->start = v;
+                    otherEdge->end = u;
                     otherEdge->weight = w;
 
-                    if (ADJ[u - 1] == NULL && ADJ[v - 1] == NULL) {
+                    if (ADJ[u - 1] == NULL && ADJ[v - 1] == NULL) 
+                    {
                     // Both vertices have empty adjacency lists
                     ADJ[u - 1] = newEdge;
                     ADJ[v - 1] = otherEdge;
-                    } else if (ADJ[u - 1] == NULL && ADJ[v - 1] != NULL) {
+                    } 
+                    else if (ADJ[u - 1] == NULL && ADJ[v - 1] != NULL)
+                    {
                     // Vertex u has an empty adjacency list
                     ADJ[u - 1] = newEdge;
-                    pEDGE loop2 = ADJ[v - 1];
-                        while (loop2->next != NULL) {
-                            loop2 = loop2->next;
-                        }
-                        loop2->next = otherEdge;
-                } else if (ADJ[u - 1] != NULL && ADJ[v - 1] == NULL) {
-                // Vertex v has an empty adjacency list
+                    pEDGE temp = ADJ[v - 1];
                     ADJ[v - 1] = otherEdge;
-                    pEDGE loop = ADJ[u - 1];
-                        while (loop->next != NULL) {
-                           loop = loop->next;
-                        }
-                        loop->next = newEdge;
-                } else {
-                    // Both vertices have non-empty adjacency lists
-                    if (strcmp(argv[3], "1") == 0) {
-                        // Undirected with flag 1
-                        newEdge->next = ADJ[u - 1];
-                        ADJ[u - 1] = newEdge;
-
-                        otherEdge->next = ADJ[v - 1];
+                    otherEdge->next =temp;
+                    } 
+                    else if (ADJ[u - 1] != NULL && ADJ[v - 1] == NULL) 
+                    {
+                    // Vertex v has an empty adjacency list
                         ADJ[v - 1] = otherEdge;
-                    } else {
-                        // Undirected with flag 2
-                        pEDGE loop = ADJ[u - 1];
-                        while (loop->next != NULL) {
-                           loop = loop->next;
-                        }
-                        loop->next = newEdge;
+                        pEDGE temp = ADJ[u - 1];
+                        ADJ[u - 1] = newEdge;
+                        newEdge->next = temp;
+                    } 
+                    else 
+                    {
+                        // Both vertices have non-empty adjacency lists
+                        if (strcmp(argv[3], "1") == 0) 
+                        {
+                            // Undirected with flag 1
+                            newEdge->next = ADJ[u - 1];
+                            ADJ[u - 1] = newEdge;
 
-                        pEDGE loop2 = ADJ[v - 1];
-                        while (loop2->next != NULL) {
-                            loop2 = loop2->next;
+                            otherEdge->next = ADJ[v - 1];
+                            ADJ[v - 1] = otherEdge;
+                        } 
+                        else 
+                        {
+                            // Undirected with flag 2
+                            pEDGE loop = ADJ[u - 1];
+                            while (loop->next != NULL) 
+                            {
+                            loop = loop->next;
+                            }
+                            loop->next = newEdge;
+
+                            pEDGE loop2 = ADJ[v - 1];
+                            while (loop2->next != NULL) 
+                            {
+                                loop2 = loop2->next;
+                            }
+                            loop2->next = otherEdge;
                         }
-                        loop2->next = otherEdge;
                     }
                 }
-            }
     }
     fclose(fp);
 
-    while (1){
+    while (1)
+    {
 
         returnV = nextInstruction(Word, &ver1, &ver2);
         //if the funtion returns 0 the instruction is invalid
