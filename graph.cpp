@@ -84,7 +84,7 @@ void singleSource(pVertex* V, int vertices, int vSource, pEDGE* adjList, int des
 }
 
 void initSinglePair(pVertex* V, int n, int source, int destination) {
-    for (int i = 1; i <= n; i++) {
+    for (int i = 0; i < n; i++) {
         if (i == source) {
             V[i]->key = 0; // Set key of source vertex to 0
         } else {
@@ -94,12 +94,6 @@ void initSinglePair(pVertex* V, int n, int source, int destination) {
     }
 }
 
-void singlePair(pVertex* V, int vertices, int source, int destination, pEDGE* adjList) 
-{
-    initSinglePair(V, vertices, source, destination);
-
-    singleSource(V, vertices, source, adjList, destination);
-}
 
 void printlength(int s, int t){
     if(check1){
