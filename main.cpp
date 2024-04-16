@@ -7,6 +7,7 @@
 #include "util.h"
 #include "heap.h"
 #include "graph.h"
+#include "math.h"
 using namespace std;
 
 int main(int argc, char **argv){
@@ -19,7 +20,7 @@ int main(int argc, char **argv){
     int numVer=0;
 
     if (argc < 3){
-        fprintf(stderr, "Usage: %s <inputfile> <Graphtype> <Flag> \n", argv[0]);
+        fprintf(stdout, "Usage: %s <inputfile> <Graphtype> <Flag> \n", argv[0]);
         exit(0);
     }
     fp = fopen(argv[1],"r");
@@ -64,7 +65,8 @@ int main(int argc, char **argv){
                     if(ADJ[u-1] == NULL){
                         //fprintf(stderr,"I was here ADJ[u] == NULL\n");
                         ADJ[u-1] = newEdge; // add the new edge to the front of the list
-                    }else{
+                    }
+                    else{
                         if(strcmp(argv[3], "1")==0){
                             // directed + flag 1
                                 newEdge->next = ADJ[u - 1];
@@ -139,7 +141,7 @@ int main(int argc, char **argv){
         returnV = nextInstruction(Word, &ver1, &ver2);
         //if the funtion returns 0 the instruction is invalid
         if (returnV == 0){
-            fprintf(stderr, "Warning: Invalid instruction\n");
+            fprintf(stdout, "Warning: Invalid instruction\n");
             continue;
         }
         // end if STOP is entered
@@ -149,20 +151,18 @@ int main(int argc, char **argv){
         // print command is entered
         if(strcmp(Word, "PrintADJ")==0){
             for(int i =0; i < numVer ; i++){
-                fprintf(stderr,"ADJ[%d]:-->[%d %d: %f]",i+1,ADJ[i]->start,ADJ[i]->end,ADJ[i]->weight);
+                fprintf(stdout,"ADJ[%d]:-->[%d %d: %.2f]",i+1,ADJ[i]->start,ADJ[i]->end,ADJ[i]->weight);
                 pEDGE loop = ADJ[i]->next;
                 while(loop != NULL){
-                    fprintf(stderr,"-->[%d %d: %f]",loop->start,loop->end,loop->weight);
+                    fprintf(stdout,"-->[%d %d: %.2f]",loop->start,loop->end,loop->weight);
                     loop = loop->next;
                 }
-                fprintf(stderr,"\n");
+                fprintf(stdout,"\n");
             }
-
             continue;
         }
         // SinglePair command is entered
         if(strcmp(Word, "SinglePair")==0){
-            printf("Hello");
             initSinglePair(vertexList,numVer,ver1,ver2);
             singleSource(vertexList,numVer,ver1,ADJ,ver2);
             continue;

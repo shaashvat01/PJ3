@@ -4,6 +4,7 @@
 #include "heap.h"
 #include "stack.h"
 #include "util.h"
+#include "math.h"
 using namespace std;
 
 int num1 = 0;
@@ -56,14 +57,13 @@ void singleSource(pVertex* V, int vertices, int vSource, pEDGE* adjList, int des
     //     stack->Stack[i]->vertex = new VERTEX; // Allocate memory for the vertex
     // }
     if(heap == NULL){
-        printf("Error: Failed to allocate memory for HEAP.\n");
+        fprintf(stdout,"Error: Failed to allocate memory for HEAP.");
         return;
     }
 
     for(int i=0;i<vertices;i++){
         insertH(heap,V[i]);
     }
-    printH(heap);
     
     while(heap->size!=0){
         pVertex newV = extractMin(heap);
@@ -87,7 +87,6 @@ void singleSource(pVertex* V, int vertices, int vSource, pEDGE* adjList, int des
             Edge = Edge->next;
         }
         heapify(heap,0);
-        printH(heap);
     }
     vertex_list = V;
 }
@@ -107,28 +106,26 @@ void printlength(int s, int t)
 {
     if(recent_source != s)
     {
-        fprintf(stdout,"This is wrong source vertex");
-        return;
+        return; // wring source vertex
     }
     if(recent_destination!= t &&recent_destination!=0 )
     {
-        fprintf(stdout,"This is wrong destination vertex");
-        return;
+        return; // wring destination vertex
     }
     if(recent_destination==0)
     {
         if(vertex_list[t-1]->key == INFINITY)
         {
-            printf("There is no path from %d to %d.\n",s,t);
+            fprintf(stdout,"There is no path from %d to %d.",s,t);
         }
         else
         {
-            fprintf(stdout,"The length of the shortest path from %d to %d is: %lf\n",s,t,vertex_list[t-1]->key);
+            fprintf(stdout,"The length of the shortest path from %d to %d is: %lf",s,t,vertex_list[t-1]->key);
         }
     }
     else 
     {
-        fprintf(stdout,"The length of the shortest path from %d to %d is: %lf\n",s,t,vertex_list[t-1]->key);
+        fprintf(stdout,"The length of the shortest path from %d to %d is: %lf",s,t,vertex_list[t-1]->key);
     }
 }
 
@@ -137,18 +134,16 @@ void printPath(int s, int t){
     STACK_EDGE* e_stack = g_stack->head;
 
     if(recent_source != s){
-        fprintf(stdout,"This is wrong source vertex");
-        return;
+        return; // wring source vertex
     }
     if(recent_destination!= t &&recent_destination!=0 ){
-        fprintf(stdout,"This is wrong destination vertex");
-        return;
+        return; // wring destination vertex
     }
     if(recent_destination==0)
     {
         if(vertex_list[t-1]->key == INFINITY)
         {
-            printf("There is no path from %d to %d.\n",s,t);
+            fprintf(stdout,"There is no path from %d to %d.",s,t);  
         }
         else
         {

@@ -1,6 +1,7 @@
 #include "stack.h"
 #include "data_structures.h"
 #include <iostream>
+#include "math.h"
 using namespace std;
 
 void push(STACK* Stack, VERTEX* vertex)

@@ -1,6 +1,7 @@
 #include "heap.h"
 #include "data_structures.h"
 #include <iostream>
+#include "math.h"
 using namespace std;
 
 // heapifycalls for counting number of heapify calls
@@ -52,7 +53,7 @@ pVertex extractMin(HEAP* h) {
         return NULL;
     }
     if (h->size <= 0) {
-        fprintf(stderr, "Error: heap is empty\n");
+        fprintf(stdout, "Error: heap is empty");
         return NULL;
     }
     pVertex minVertex = h->A[0];
@@ -61,7 +62,7 @@ pVertex extractMin(HEAP* h) {
     h->A[0]->h_pos = 0; // Update heappos for the root vertex
     heapify(h, 0); // Heapify the heap from the root
 
-    printf("ExtractMin: %d\n", minVertex->id);
+    fprintf(stdout,"ExtractMin: %d", minVertex->id);
     return minVertex;
 }
 
@@ -69,18 +70,15 @@ void decreaseKey(HEAP* h, int position, double newKey) {
     int i = position;
 
     if (h == NULL) {
-        cout << "Error: heap is Null" << endl;
-        return;
+        return; // heap is NULL
     }
 
     if (h->size == 0 || i >= h->size || i < 0) {
-        cout << "Error: invalid call to DecreaseKey" << endl;
-        return;
+        return; // invalid call to decrease key
     }
 
     if (newKey > h->A[i]->key) {
-        cout << "Error: new key is not smaller than the current key" << endl;
-        return;
+        return; // new key not smaller than current key
     }
 
     h->A[i]->key = newKey;
@@ -101,14 +99,14 @@ void decreaseKey(HEAP* h, int position, double newKey) {
 
 void insertH(HEAP* h, pVertex newKey) {
     if (h->capacity == 0) {
-        cout << "Error: heap is Empty";
-        return;
+        return;  // heap i sempty
     }
     if (h->size == h->capacity) {
-        cout << "Error: heap is full";
-        return;
+        return; // heap is full
     } 
-    if (h->A[0] == NULL) fprintf(stderr, "0 is NULL.\n");
+
+    if (h->A[0] == NULL) fprintf(stdout, "0 is NULL.");
+
     h->A[h->size] = newKey;
     newKey->h_pos = h->size; // Set heappos for the new vertex
     h->size++;
@@ -131,10 +129,10 @@ void insertH(HEAP* h, pVertex newKey) {
 
 void printH(HEAP* h) {
     if (h == NULL) {
-        fprintf(stderr, "heap is empty .\n");
+        fprintf(stdout, "heap is empty .\n");
         return; //cout<<"Error: heap is NUll"<<endl;
     } 
     for (int i = 0; i < h->size; i++) {
-        printf("index : %d, heappos: %d, Distance :%lf\n", h->A[i]->id, h->A[i]->h_pos,h->A[i]->key);
+        fprintf(stdout,"index : %d, heappos: %d, Distance :%lf\n", h->A[i]->id, h->A[i]->h_pos,h->A[i]->key);
     }
 }

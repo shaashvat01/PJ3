@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "util.h"
+#include "math.h"
 
 int  nextInstruction(char *Word, int *num1,int *num2)
 {
