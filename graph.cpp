@@ -90,15 +90,6 @@ void singleSource(pVertex* V, int vertices, int vSource, pEDGE* adjList, int des
         printH(heap);
     }
     vertex_list = V;
-
-    // STACK_EDGE* newStackNode = stack->head;
-    // fprintf(stdout,"%d", stack->size);
-    // for(int i=0;i<stack->size-1;i++){
-    //     pVertex newVV = newStackNode->vertex;
-    //     fprintf(stdout,"Element %d in stack, %d\n",i,newVV->id);
-    //     newStackNode = newStackNode->next;
-    // }
-    //fprintf(stdout,"%d", stack->size);
 }
 
 void initSinglePair(pVertex* V, int n, int source, int destination) {
