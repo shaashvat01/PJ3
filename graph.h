@@ -10,6 +10,6 @@ void initSinglePair(pVertex* V, int num, int source, int destination);
 void singlePair(pVertex* V, int vertices, int source, int destination, pEDGE* adjList);
 
 void printlength(int s, int t);
-void printPath(pVertex* V, int destination);
+void printPath(int s, int t);
 
 #endif

@@ -3,11 +3,16 @@
 #include "graph.h"
 #include "heap.h"
 #include "stack.h"
+#include "util.h"
 using namespace std;
 
 int num1 = 0;
-int destination = 0;
+//int destination = 0;
 bool check1 = false;
+int recent_source = 0;
+int recent_destination = 0;
+pVertex* vertex_list;
+STACK* g_stack = (STACK*)malloc(sizeof(STACK));
 
 void initSingleSource(pVertex* V, int vertices, int source) {
     // Initialize single source for Dijkstra's algorithm
@@ -30,6 +35,8 @@ bool relax(pVertex start, pVertex end, double weight) {
 }
 
 void singleSource(pVertex* V, int vertices, int vSource, pEDGE* adjList, int destination){
+    recent_source = vSource;
+    recent_destination = destination;
     num1 = vSource;
     check1 = true;
 
@@ -37,16 +44,17 @@ void singleSource(pVertex* V, int vertices, int vSource, pEDGE* adjList, int des
     heap->capacity = vertices;
     heap->size = 0;
     heap->A = new VERTEX*[heap->capacity];
-    for(int i=0;i<heap->capacity;i++){
-        heap->A[i] = new VERTEX;
-    }
+    // for(int i=0;i<heap->capacity;i++){
+    //     heap->A[i] = new VERTEX;
+    // }
     STACK* stack = new STACK; //new stack
-    stack->size = vertices;
+    stack->size = 0;
     stack->Stack = new STACK_EDGE*[vertices];
-    for(int i = 0; i < vertices; i++) {
-        stack->Stack[i] = new STACK_EDGE; // Allocate memory for each stack node
-        stack->Stack[i]->vertex = new VERTEX; // Allocate memory for the vertex
-    }
+    g_stack = stack;
+    // for(int i = 0; i < vertices; i++) {
+    //     stack->Stack[i] = new STACK_EDGE; // Allocate memory for each stack node
+    //     stack->Stack[i]->vertex = new VERTEX; // Allocate memory for the vertex
+    // }
     if(heap == NULL){
         printf("Error: Failed to allocate memory for HEAP.\n");
         return;
@@ -81,6 +89,16 @@ void singleSource(pVertex* V, int vertices, int vSource, pEDGE* adjList, int des
         heapify(heap,0);
         printH(heap);
     }
+    vertex_list = V;
+
+    // STACK_EDGE* newStackNode = stack->head;
+    // fprintf(stdout,"%d", stack->size);
+    // for(int i=0;i<stack->size-1;i++){
+    //     pVertex newVV = newStackNode->vertex;
+    //     fprintf(stdout,"Element %d in stack, %d\n",i,newVV->id);
+    //     newStackNode = newStackNode->next;
+    // }
+    //fprintf(stdout,"%d", stack->size);
 }
 
 void initSinglePair(pVertex* V, int n, int source, int destination) {
@@ -94,22 +112,80 @@ void initSinglePair(pVertex* V, int n, int source, int destination) {
     }
 }
 
-
-void printlength(int s, int t){
-    if(check1){
-        if(num1 != s){
-            return ;
+void printlength(int s, int t)
+{
+    if(recent_source != s)
+    {
+        fprintf(stdout,"This is wrong source vertex");
+        return;
+    }
+    if(recent_destination!= t &&recent_destination!=0 )
+    {
+        fprintf(stdout,"This is wrong destination vertex");
+        return;
+    }
+    if(recent_destination==0)
+    {
+        if(vertex_list[t-1]->key == INFINITY)
+        {
+            printf("There is no path from %d to %d.\n",s,t);
         }
-    }else{
-        if(num1 != s && destination != t){
-            return;
+        else
+        {
+            fprintf(stdout,"The length of the shortest path from %d to %d is: %lf\n",s,t,vertex_list[t-1]->key);
         }
     }
-
-
-
+    else 
+    {
+        fprintf(stdout,"The length of the shortest path from %d to %d is: %lf\n",s,t,vertex_list[t-1]->key);
+    }
 }
 
 void printPath(int s, int t){
 
+    STACK_EDGE* e_stack = g_stack->head;
+
+    if(recent_source != s){
+        fprintf(stdout,"This is wrong source vertex");
+        return;
+    }
+    if(recent_destination!= t &&recent_destination!=0 ){
+        fprintf(stdout,"This is wrong destination vertex");
+        return;
+    }
+    if(recent_destination==0)
+    {
+        if(vertex_list[t-1]->key == INFINITY)
+        {
+            printf("There is no path from %d to %d.\n",s,t);
+        }
+        else
+        {
+            fprintf(stdout,"[%d: %lf]",e_stack->vertex->id,e_stack->vertex->key);
+            e_stack = e_stack->next;
+            while(e_stack != NULL)
+            {
+                fprintf(stdout,"-->[%d: %lf]",e_stack->vertex->id,e_stack->vertex->key);
+                if(e_stack->vertex->id == t)
+                {
+                    return;
+                }
+                e_stack = e_stack->next;
+            }
+        }
+    }
+    else
+    {
+        fprintf(stdout,"[%d: %lf]",e_stack->vertex->id,e_stack->vertex->key);
+        e_stack = e_stack->next;
+        while(e_stack != NULL)
+        {
+            fprintf(stdout,"-->[%d: %lf]",e_stack->vertex->id,e_stack->vertex->key);
+            if(e_stack->vertex->id == t)
+            {
+                return;
+            }
+            e_stack = e_stack->next;
+        }
+    }
 }

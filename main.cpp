@@ -182,7 +182,7 @@ int main(int argc, char **argv){
         }
 
         if(strcmp(Word, "PrintPath")==0){
-            //printPath(ver1,ver2);
+            printPath(ver1,ver2);
             continue;
         }
     }
