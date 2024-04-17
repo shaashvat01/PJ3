@@ -102,28 +102,56 @@ int main(int argc, char **argv){
                         // Vertex u has an empty adjacency list
                         ADJ[u - 1] = newEdge;
                         pEDGE loop2 = ADJ[v-1];
+                        if(strcmp(argv[3], "2"))
+                        {
+                            pEDGE temp = ADJ[v - 1];
+                            ADJ[v - 1] = otherEdge;
+                            otherEdge->next =temp;
+                        }
+                        if(strcmp(argv[3], "1"))
+                        {
+                            while(loop2->next != NULL)
+                            {
+                                loop2 = loop2->next;
+                            }
+                            loop2->next = otherEdge;
+                        }
                         // while(loop2->next != NULL)
                         // {
                         //     loop2 = loop2->next;
                         // }
                         // loop2->next = otherEdge;
-                        pEDGE temp = ADJ[v - 1];
-                        ADJ[v - 1] = otherEdge;
-                        otherEdge->next =temp;
+                        // pEDGE temp = ADJ[v - 1];
+                        // ADJ[v - 1] = otherEdge;
+                        // otherEdge->next =temp;
                     } 
                     else if (ADJ[u - 1] != NULL && ADJ[v - 1] == NULL) 
                     {
                     // Vertex v has an empty adjacency list
                         ADJ[v - 1] = otherEdge;
                         pEDGE loop = ADJ[u-1];
+                        if(strcmp(argv[3], "2"))
+                        {
+                            pEDGE temp = ADJ[u - 1];
+                            ADJ[u - 1] = newEdge;
+                            newEdge->next = temp;
+                        }
+                        if(strcmp(argv[3], "1"))
+                        {
+                            while(loop->next != NULL)
+                            {
+                                loop = loop->next;
+                            }
+                            loop->next = newEdge;
+                        }
                         // while(loop->next != NULL)
                         // {
                         //     loop = loop->next;
                         // }
                         // loop->next = newEdge;
-                        pEDGE temp = ADJ[u - 1];
-                        ADJ[u - 1] = newEdge;
-                        newEdge->next = temp;
+                        // pEDGE temp = ADJ[u - 1];
+                        // ADJ[u - 1] = newEdge;
+                        // newEdge->next = temp;
                     } 
                     else 
                     {
