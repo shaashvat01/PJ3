@@ -32,7 +32,8 @@ VERTEX* pop(STACK* Stack)
     STACK_EDGE* edge = Stack->head;
     VERTEX* newV = Stack->head->vertex;
     Stack->head = Stack->head->next;
-    delete edge; 
+    delete edge;
+    Stack->size--; 
     return newV;
-    Stack->size--;
+    
 }

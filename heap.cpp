@@ -62,7 +62,6 @@ pVertex extractMin(HEAP* h) {
     h->A[0]->h_pos = 0; // Update heappos for the root vertex
     heapify(h, 0); // Heapify the heap from the root
 
-    fprintf(stdout,"ExtractMin: %d", minVertex->id);
     return minVertex;
 }
 
@@ -105,7 +104,7 @@ void insertH(HEAP* h, pVertex newKey) {
         return; // heap is full
     } 
 
-    if (h->A[0] == NULL) fprintf(stdout, "0 is NULL.");
+    //if (h->A[0] == NULL) fprintf(stdout, "0 is NULL.");
 
     h->A[h->size] = newKey;
     newKey->h_pos = h->size; // Set heappos for the new vertex

@@ -24,20 +24,15 @@ int main(int argc, char **argv){
         exit(0);
     }
     fp = fopen(argv[1],"r");
-    ifstream file(argv[1]);
-    if(fp){
-        string line;
-        int num1,num2;
-        getline(file, line) ;
-            istringstream iss(line);
-                if (iss >> num1 >> num2) {
-                    numEdge = num2;
-                    numVer = num1;
-                }
+    if(fp)
+    {
+        int num1 = 0;
+        int num2 = 0;
+        fscanf(fp, "%d %d", &num1, &num2);
+        numVer = num1;
+        numEdge = num2;
     }
-    fclose(fp);
-
-    fp = fopen(argv[1],"r");
+    
     pEDGE *ADJ = new pEDGE[numVer];
     for (int i = 0; i < numVer; i++) {
         ADJ[i] = NULL; // Allocate memory for each element
@@ -51,10 +46,9 @@ int main(int argc, char **argv){
         string line2;
         int index,u,v;
         double w;
-        while (getline(file, line2)) {
-            istringstream iss(line2);
-            iss >> index >> u >> v >> w;
-            pEDGE newEdge = new EDGE;
+        for(int i = 0; i< numEdge; i++) {
+            fscanf(fp, "%d %d %d %lf", &index, &u,&v,&w);
+            pEDGE newEdge = (pEDGE)malloc(sizeof(EDGE));
             newEdge->id = index;
             newEdge->start = u;
             newEdge->end = v;
@@ -98,16 +92,28 @@ int main(int argc, char **argv){
                     } 
                     else if (ADJ[u - 1] == NULL && ADJ[v - 1] != NULL)
                     {
-                    // Vertex u has an empty adjacency list
-                    ADJ[u - 1] = newEdge;
-                    pEDGE temp = ADJ[v - 1];
-                    ADJ[v - 1] = otherEdge;
-                    otherEdge->next =temp;
+                        // Vertex u has an empty adjacency list
+                        ADJ[u - 1] = newEdge;
+                        pEDGE loop2 = ADJ[v-1];
+                        // while(loop2->next != NULL)
+                        // {
+                        //     loop2 = loop2->next;
+                        // }
+                        // loop2->next = otherEdge;
+                        pEDGE temp = ADJ[v - 1];
+                        ADJ[v - 1] = otherEdge;
+                        otherEdge->next =temp;
                     } 
                     else if (ADJ[u - 1] != NULL && ADJ[v - 1] == NULL) 
                     {
                     // Vertex v has an empty adjacency list
                         ADJ[v - 1] = otherEdge;
+                        pEDGE loop = ADJ[u-1];
+                        // while(loop->next != NULL)
+                        // {
+                        //     loop = loop->next;
+                        // }
+                        // loop->next = newEdge;
                         pEDGE temp = ADJ[u - 1];
                         ADJ[u - 1] = newEdge;
                         newEdge->next = temp;
@@ -127,10 +133,11 @@ int main(int argc, char **argv){
                         else 
                         {
                             // Undirected with flag 2
+                            //fprintf(stdout,"undirected with flag 2\n");
                             pEDGE loop = ADJ[u - 1];
                             while (loop->next != NULL) 
                             {
-                            loop = loop->next;
+                                loop = loop->next;
                             }
                             loop->next = newEdge;
 
