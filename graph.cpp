@@ -45,17 +45,12 @@ void singleSource(pVertex* V, int vertices, int vSource, pEDGE* adjList, int des
     heap->capacity = vertices;
     heap->size = 0;
     heap->A = new VERTEX*[heap->capacity];
-    // for(int i=0;i<heap->capacity;i++){
-    //     heap->A[i] = new VERTEX;
-    // }
+
     STACK* stack = new STACK; //new stack
     stack->size = 0;
     stack->Stack = new STACK_EDGE*[vertices];
     g_stack = stack;
-    // for(int i = 0; i < vertices; i++) {
-    //     stack->Stack[i] = new STACK_EDGE; // Allocate memory for each stack node
-    //     stack->Stack[i]->vertex = new VERTEX; // Allocate memory for the vertex
-    // }
+
     if(heap == NULL){
         fprintf(stdout,"Error: Failed to allocate memory for HEAP.");
         return;
@@ -67,11 +62,9 @@ void singleSource(pVertex* V, int vertices, int vSource, pEDGE* adjList, int des
     
     while(heap->size!=0){
         pVertex newV = extractMin(heap);
-        //push(stack,newV);
-       
-        //printf("index of extract min vertex %d.\n",newV->id);
         pEDGE edge = adjList[newV->id-1]; 
         int nodecount = 1;
+
         while(edge->next!=NULL){
             edge = edge->next;
             nodecount++;
@@ -79,9 +72,6 @@ void singleSource(pVertex* V, int vertices, int vSource, pEDGE* adjList, int des
         pEDGE Edge = adjList[newV->id-1];
         bool decrease;
         for(int j= 0;j<nodecount;j++){
-            // if(relax(newV,V[Edge->end-1],Edge->weight)){
-            //     decreaseKey(heap,V[Edge->end-1]->h_pos,newV->key + Edge->weight);
-            // }
             decrease = relax(newV,V[Edge->end-1],Edge->weight);
             if(decrease)
             {
@@ -96,6 +86,12 @@ void singleSource(pVertex* V, int vertices, int vSource, pEDGE* adjList, int des
         }
     }
     vertex_list = V;
+    // Deleting the objects pointed to by the array elements
+    // for (int i = 0; i < heap->size; ++i) {
+    //     delete heap->A[i]; // Delete each object
+    // }
+    // // Deleting the array itself
+    // delete[] heap;
 }
 
 void initSinglePair(pVertex* V, int n, int source, int destination) {
@@ -136,52 +132,6 @@ void printlength(int s, int t)
     }
 }
 
-// void printPath(int s, int t){
-
-//     STACK_EDGE* e_stack = g_stack->head;
-
-//     if(recent_source != s){
-//         return; // wring source vertex
-//     }
-//     if(recent_destination!= t &&recent_destination!=0 ){
-//         return; // wring destination vertex
-//     }
-//     if(recent_destination==0)
-//     {
-//         if(vertex_list[t-1]->key == INFINITY)
-//         {
-//             fprintf(stdout,"There is no path from %d to %d.",s,t);  
-//         }
-//         else
-//         {
-//             fprintf(stdout,"[%d: %lf]",e_stack->vertex->id,e_stack->vertex->key);
-//             e_stack = e_stack->next;
-//             while(e_stack != NULL)
-//             {
-//                 fprintf(stdout,"-->[%d: %lf]",e_stack->vertex->id,e_stack->vertex->key);
-//                 if(e_stack->vertex->id == t)
-//                 {
-//                     return;
-//                 }
-//                 e_stack = e_stack->next;
-//             }
-//         }
-//     }
-//     else
-//     {
-//         fprintf(stdout,"[%d: %lf]",e_stack->vertex->id,e_stack->vertex->key);
-//         e_stack = e_stack->next;
-//         while(e_stack != NULL)
-//         {
-//             fprintf(stdout,"-->[%d: %lf]",e_stack->vertex->id,e_stack->vertex->key);
-//             if(e_stack->vertex->id == t)
-//             {
-//                 return;
-//             }
-//             e_stack = e_stack->next;
-//         }
-//     }
-// }
 
 void printPath(int source,int target)
 {

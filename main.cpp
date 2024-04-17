@@ -23,6 +23,12 @@ int main(int argc, char **argv){
         fprintf(stdout, "Usage: %s <inputfile> <Graphtype> <Flag> \n", argv[0]);
         exit(0);
     }
+
+    if(strcmp(argv[3], "1")!=0 && strcmp(argv[3], "2")!=0)
+    {
+        exit(0);
+    }
+
     fp = fopen(argv[1],"r");
     if(fp)
     {
@@ -66,7 +72,8 @@ int main(int argc, char **argv){
                                 newEdge->next = ADJ[u - 1];
                                 ADJ[u - 1] = newEdge; // Update head of the list
                                 //fprintf(stderr,"flag 1 not NULL\n");
-                        }else{
+                        }
+                        if(strcmp(argv[3], "2")==0){
                             //directed + flag 2
                             pEDGE loop = ADJ[u - 1];
                             while (loop->next != NULL) {
@@ -76,7 +83,7 @@ int main(int argc, char **argv){
                         }
                     }
                 }
-                else 
+                else
                 {
                     pEDGE otherEdge = new EDGE;
                     otherEdge->id = index;
@@ -167,7 +174,8 @@ int main(int argc, char **argv){
             return 0;
         }
         // print command is entered
-        if(strcmp(Word, "PrintADJ")==0){
+        if(strcmp(Word, "PrintADJ")==0)
+        {
             for(int i =0; i < numVer ; i++){
                 fprintf(stdout,"ADJ[%d]:-->[%d %d: %.2f]",i+1,ADJ[i]->start,ADJ[i]->end,ADJ[i]->weight);
                 pEDGE loop = ADJ[i]->next;
@@ -200,8 +208,14 @@ int main(int argc, char **argv){
         }
 
         if(strcmp(Word, "PrintPath")==0){
-            printPath(ver1,ver2);
-            continue;
+            if(recent_source != 0 || recent_destination != 0)
+            {
+                if(recent_source == ver1)
+                {
+                    printPath(ver1,ver2);
+                    continue;
+                }
+            }
         }
     }
 }

@@ -2,6 +2,9 @@
 #define _graph_cpp 1
 #include "data_structures.h"
 
+extern int recent_source;
+extern int recent_destination;
+
 void initSingleSource(pVertex* V, int vertices, int source);
 bool relax(pVertex start, pVertex end, double weight);
 void singleSource(pVertex* V, int vertices, int vSource, pEDGE* adjList, int destination);
