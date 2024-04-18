@@ -85,7 +85,7 @@ int main(int argc, char **argv){
                 }
                 else
                 {
-                    pEDGE otherEdge = new EDGE;
+                    pEDGE otherEdge = (pEDGE)malloc(sizeof(EDGE));
                     otherEdge->id = index;
                     otherEdge->start = v;
                     otherEdge->end = u;

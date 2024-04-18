@@ -104,8 +104,6 @@ void insertH(HEAP* h, pVertex newKey) {
         return; // heap is full
     } 
 
-    //if (h->A[0] == NULL) fprintf(stdout, "0 is NULL.");
-
     h->A[h->size] = newKey;
     newKey->h_pos = h->size; // Set heappos for the new vertex
     h->size++;

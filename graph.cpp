@@ -40,13 +40,14 @@ void singleSource(pVertex* V, int vertices, int vSource, pEDGE* adjList, int des
     recent_destination = destination;
     num1 = vSource;
     check1 = true;
-
-    HEAP* heap = new HEAP; // priority queue - min heap
+    
+    //HEAP* heap = new HEAP; // priority queue - min heap
+    HEAP* heap = (HEAP*)malloc(sizeof(HEAP));
     heap->capacity = vertices;
     heap->size = 0;
     heap->A = new VERTEX*[heap->capacity];
 
-    STACK* stack = new STACK; //new stack
+    STACK* stack = (STACK*)malloc(sizeof(STACK));
     stack->size = 0;
     stack->Stack = new STACK_EDGE*[vertices];
     g_stack = stack;
@@ -86,12 +87,6 @@ void singleSource(pVertex* V, int vertices, int vSource, pEDGE* adjList, int des
         }
     }
     vertex_list = V;
-    // Deleting the objects pointed to by the array elements
-    // for (int i = 0; i < heap->size; ++i) {
-    //     delete heap->A[i]; // Delete each object
-    // }
-    // // Deleting the array itself
-    // delete[] heap;
 }
 
 void initSinglePair(pVertex* V, int n, int source, int destination) {
@@ -131,7 +126,6 @@ void printlength(int s, int t)
         fprintf(stdout,"The length of the shortest path from %d to %d is:     %.2lf\n",s,t,vertex_list[t-1]->key);
     }
 }
-
 
 void printPath(int source,int target)
 {
@@ -176,6 +170,5 @@ void printPath(int source,int target)
         {
             fprintf(stdout,"-->");
         }
-    }
-    
+    } 
 }
