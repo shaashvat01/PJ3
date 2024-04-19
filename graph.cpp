@@ -64,6 +64,11 @@ void singleSource(pVertex* V, int vertices, int vSource, pEDGE* adjList, int des
     while(heap->size!=0){
         pVertex newV = extractMin(heap);
         pEDGE edge = adjList[newV->id-1]; 
+        
+        if(edge == NULL) // Most important condition check.
+        {
+            continue;
+        }
         int nodecount = 1;
 
         while(edge->next!=NULL){
