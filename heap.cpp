@@ -1,135 +1,197 @@
+// Name: Shaashvat Mittal
+// ASUID: 1224208336
+// Description: heap.cpp contains major functionality of the heaps. It includes functions to build, heapify,
+// insert, extractMin, decreaseKey, initialize and print the heap. These functions are important for the proper
+// execution of the code.
+
 #include "heap.h"
 #include "data_structures.h"
-#include <iostream>
 #include "math.h"
+#include <iostream>
 using namespace std;
 
-// heapifycalls for counting number of heapify calls
-int  heapifycalls = 0;
+// count1 for counting number of heapify calls
+int  count1 = 0;
 
-void heapify(HEAP* h, int i) {
-    int smallest = i;
-    int left = 2 * i + 1;
-    int right = 2 * i + 2;
-
-    // Check if left child is smaller than parent
-    if (left < h->size && h->A[left]->key < h->A[smallest]->key) {
-        smallest = left;
-    }
-
-    // Check if right child is smaller than smallest so far
-    if (right < h->size && h->A[right]->key < h->A[smallest]->key) {
-        smallest = right;
-    }
-
-    // If smallest is not the root
-    if (smallest != i) {
-        // Swap vertices
-        pVertex temp = h->A[i];
-        int temp_heappos = h->A[i]->h_pos;
-
-        h->A[i] = h->A[smallest];
-        h->A[i]->h_pos = temp_heappos;
-
-        h->A[smallest] = temp;
-        h->A[smallest]->h_pos = smallest;
-
-        // Recursively heapify the affected subtree
-        heapify(h, smallest);
-    }
-}
-
-void buildH(HEAP* h, int n){
-    int i = n/2-1;
-    for(int r = i;r>=0;r--){
-        heapify(h,r);
-        heapifycalls++;
-    }
-}
-
-pVertex extractMin(HEAP* h) {
-    if (h == NULL) {
-        cout << "Error: heap is Null";
+// Initialize heap
+HEAP* init(int capacity) 
+{
+    HEAP *heap = new HEAP;  // new heap
+    // return NULL if not initialized.
+    if (heap == NULL) 
+    {
+        cout << "Memory allocation failed." << endl;
         return NULL;
     }
-    if (h->size <= 0) {
-        fprintf(stdout, "Error: heap is empty");
+    // initializing capacity, size and new element for the heap.
+    heap->capacity = capacity;
+    heap->size = 0;
+    heap->A = new ELEMENT*[capacity];
+
+    // if NULL return error
+    if (heap->A == NULL) 
+    {
+        cout << "Memory allocation failed." << endl;
+        delete heap; // delete heap to clear memeory.
         return NULL;
     }
-    pVertex minVertex = h->A[0];
-    h->size = h->size - 1;
-    h->A[0] = h->A[h->size]; // Replace the root with the last element
-    h->A[0]->h_pos = 0; // Update heappos for the root vertex
-    heapify(h, 0); // Heapify the heap from the root
-
-    return minVertex;
+    // adding elements to the heap.
+    for (int i = 0; i < capacity; i++) 
+    {
+        ELEMENT* newElement = new ELEMENT;
+        heap->A[i] = newElement; 
+    }
+    return heap;
 }
 
-void decreaseKey(HEAP* h, int position, double newKey) {
-    int i = position;
-
-    if (h == NULL) {
-        return; // heap is NULL
-    }
-
-    if (h->size == 0 || i >= h->size || i < 0) {
-        return; // invalid call to decrease key
-    }
-
-    if (newKey > h->A[i]->key) {
-        return; // new key not smaller than current key
-    }
-
-    h->A[i]->key = newKey;
-    while (i != 0 && h->A[(i - 1) / 2]->key > h->A[i]->key) {
-        // Swap vertices
-        pVertex temp = h->A[i];
-        int temp_heappos = h->A[i]->h_pos;
-
-        h->A[i] = h->A[(i - 1) / 2];
-        h->A[i]->h_pos = temp_heappos;
-
-        h->A[(i - 1) / 2] = temp;
-        h->A[(i - 1) / 2]->h_pos = (i - 1) / 2;
-
-        i = (i - 1) / 2;
+// build min heap
+void buildH(HEAP* heap, int size)
+{
+    int n = (size/2)-1; // size of the heap
+    for(int i = n; i >= 0; i--)
+    {
+        heapify(heap,i); // calling heapify to maintain the heap property.
+        count1++; // iterating count everytime heap is called.
     }
 }
 
-void insertH(HEAP* h, pVertex newKey) {
-    if (h->capacity == 0) {
-        return;  // heap i sempty
+// heapify
+void heapify(HEAP* heap, int i) 
+{
+    int min = i;  // initializing min
+    int left = 2 * i + 1; // left child.
+    int right = 2 * i + 2; // right child.
+
+    if (left < heap->size && heap->A[left]->key < heap->A[min]->key) 
+    {
+        min = left; // if left < min, then min = left.
     }
-    if (h->size == h->capacity) {
-        return; // heap is full
+    if (right < heap->size && heap->A[right]->key < heap->A[min]->key) 
+    {
+        min = right;  // if right < min, then min = right.
+    }
+    if (min != i) // if min value changes then we swap it with i.
+    { 
+        // S A[i] and A[min]/ vertices
+        pVertex temp = heap->A[i]; // temperorary vertex
+        int temp_heap = heap->A[i]->h_pos; 
+
+        heap->A[i] = heap->A[min];
+        heap->A[i]->h_pos = temp_heap;
+
+        heap->A[min] = temp;
+        heap->A[min]->h_pos = min;
+
+        heapify(heap, min); // calling heapify to maintain the heap property.
+    }
+}
+
+// insert in Heap.
+void insertH(HEAP* heap, pVertex key) 
+{
+    // if heap is return.
+    if (heap->capacity == 0) 
+    {
+        return;  
+    }
+    // if heap is full or has reached its capacity then return.
+    if (heap->size == heap->capacity) 
+    {
+        return;
     } 
 
-    h->A[h->size] = newKey;
-    newKey->h_pos = h->size; // Set heappos for the new vertex
-    h->size++;
-    int i = h->size - 1;
-    while (i > 0 && h->A[(i - 1) / 2]->key > h->A[i]->key) {
-        // Swap vertices
-        pVertex temp = h->A[i];
-        int temp_heappos = h->A[i]->h_pos;
+    heap->A[heap->size] = key; // add new key at the end of the heap.
+    key->h_pos = heap->size; // setting position of hrap for new vertex.
+    heap->size++; // incrementing size
+    int i = heap->size - 1; // set i.
 
-        h->A[i] = h->A[(i - 1) / 2];
-        h->A[i]->h_pos = temp_heappos;
+    // rearranging to maintain heap property.
+    while (i > 0 && heap->A[(i - 1) / 2]->key > heap->A[i]->key) {
+        // Swapping A[i] with A[(i-1)/2] or child with parent.
+        pVertex temp = heap->A[i];
+        int temp_heap = heap->A[i]->h_pos;
 
-        h->A[(i - 1) / 2] = temp;
-        h->A[(i - 1) / 2]->h_pos = (i - 1) / 2;
+        heap->A[i] = heap->A[(i - 1) / 2];
+        heap->A[i]->h_pos = temp_heap;
+
+        heap->A[(i - 1) / 2] = temp;
+        heap->A[(i - 1) / 2]->h_pos = (i - 1) / 2;
 
         i = (i - 1) / 2;
     }
     return ;
 }
 
-void printH(HEAP* h) {
-    if (h == NULL) {
-        fprintf(stdout, "heap is empty .\n");
-        return; //cout<<"Error: heap is NUll"<<endl;
+// extractMin - get the minimum value from the heap.
+pVertex extractMin(HEAP* heap) 
+{
+    // if heap is NULL return.
+    if (heap == NULL) 
+    {
+        return NULL;
+    }
+    // if heap size is < 0 return.
+    if (heap->size <= 0) 
+    {
+        return NULL;
+    }
+    pVertex min = heap->A[0];  // initializing min to node.
+    heap->size --; // decrementing size
+    heap->A[0] = heap->A[heap->size]; // adjusting values
+    heap->A[0]->h_pos = 0;
+    heapify(heap, 0); // heapify to maintain the heap property.
+
+    return min;  // returning the minimum value.
+}
+
+void decreaseKey(HEAP* heap, int i, double key) 
+{
+    // if heap is NULL return.
+    if (heap == NULL) 
+    {
+        return;
+    }
+    // if heap size is 0 then return.
+    if (heap->size == 0) 
+    {
+        return; 
+    }
+    // if i is bigger then the size or is negative value, then return.
+    if(i >= heap->size || i < 0)
+    {
+        return;
+    }
+    // if new key is not smaller then the current key, then return.
+    if (key > heap->A[i]->key) 
+    {
+        return; 
+    }
+    // changing the value of key.
+    heap->A[i]->key = key;
+    // rearranging to maintain the heap property.
+    while (i != 0 && heap->A[(i - 1) / 2]->key > heap->A[i]->key) 
+    {
+        // swapping A[i] with A[(i-2)/2] or child with parent.
+        pVertex temp = heap->A[i];
+        int temp_heap = heap->A[i]->h_pos;
+
+        heap->A[i] = heap->A[(i - 1) / 2];
+        heap->A[i]->h_pos = temp_heap;
+
+        heap->A[(i - 1) / 2] = temp;
+        heap->A[(i - 1) / 2]->h_pos = (i - 1) / 2;
+
+        i = (i - 1) / 2;
+    }
+}
+
+void printH(HEAP* heap) {
+    // if NULL return.
+    if (heap == NULL) {
+        return; 
     } 
-    for (int i = 0; i < h->size; i++) {
-        fprintf(stdout,"index : %d, heappos: %d, Distance :%lf\n", h->A[i]->id, h->A[i]->h_pos,h->A[i]->key);
+    // printing heap
+    for (int i = 0; i < heap->size; i++) {
+        fprintf(stdout,"index : %d, heappos: %d, Distance :%lf\n", heap->A[i]->id, heap->A[i]->h_pos,heap->A[i]->key);
     }
 }
